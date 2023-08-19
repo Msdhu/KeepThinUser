@@ -3,6 +3,8 @@
 		"pages/trans/index",
 		"pages/weightLoss/index",
 		"pages/mine/index",
+		"pages/mine/service/index",
+		"pages/mine/size/index",
 		"pages/bind/index"
 	],
 	"window": {

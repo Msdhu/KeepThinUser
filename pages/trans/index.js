@@ -1,9 +1,11 @@
 Page({
-	data: {},
+	data: {
+		durationInfo: { enter: 300, leave: 500 },
+	},
 	onShow() {
 		setTimeout(() => {
 			wx.switchTab({
-				url: "../weightLoss/index",
+				url: "/pages/weightLoss/index",
 			});
 		}, 1000);
 	},

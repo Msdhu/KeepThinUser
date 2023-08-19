@@ -1,0 +1,48 @@
+<view class="wraper">
+    <Tabs bindtabChange="tabChangeListener" tabsList="{{tabsList}}"></Tabs>
+    <view wx:if="{{tabIndex === 0}}">
+			<van-empty image="search" description="暂无记录" wx:if="{{ projectList.length === 0 }}" />
+			<view class="wrap">
+				<view class="record" wx:for="{{projectList}}" wx:key="index">
+					<view class="record_title">
+						<image src="/assets/shugang.png"></image>
+						<view>{{item.opDate}}</view>
+					</view>
+					<view class="record_content">
+						<view class="record_content_position">{{item.partName}}</view>
+						<view class="record_content_product">
+							<view wx:for="{{item.products}}" wx:key="index">{{item.productName}}</view>
+						</view>
+					</view>
+				</view>
+			</view>
+    </view>
+    <view wx:if="{{tabIndex === 1}}">
+			<van-empty image="search" description="暂无记录" wx:if="{{ projectList.length === 0 }}" />
+			<view class="wrap">
+				<view class="usage" wx:for="{{productList}}" wx:key="*this">
+					<view class="usage_title">
+						<image src="/assets/shugang.png"></image>
+						<view>产品购买日期：</view>
+						<view>{{item.createTime}}</view>
+					</view>
+					<view class="usage_content">
+						<view class="usage_content_head">
+							<view>产品</view>
+							<view>价格</view>
+							<view>购买数量</view>
+						</view>
+						<view class="usage_content_self">
+							<view>{{item.title}}</view>
+							<view>
+								{{item.price}}
+								<text>￥</text>
+							</view>
+							<view>{{item.quantity}}</view>
+						</view>
+						<view class="usage_content_foot">使用次数：{{item.totalUseNum}}次</view>
+					</view>
+				</view>
+			</view>
+    </view>
+</view>

@@ -9,14 +9,14 @@ Page({
 		loginInfo: {},
 		consumerInfo: {},
 	},
-	// TODO: opt = { scene: encodeURIComponent(11) } 测试使用
-	onLoad(opt = { scene: encodeURIComponent(11) }) {
+	onLoad(opt) {
 		const loginInfo = wx.getStorageSync("loginInfo");
 		this.setData({
 			loginInfo: loginInfo || {},
 		})
 		if (opt?.scene) {
-			const consumerId = decodeURIComponent(opt.scene);
+			const query = decodeURIComponent(opt.scene).split("&");
+			const consumerId = query[0].split("=")[1]
 			this.setData({
 				showLogin: !loginInfo,
 				consumerId,
@@ -24,7 +24,7 @@ Page({
 			!!loginInfo && this.getConsumerInfo(consumerId);
 		}
 	},
-	getConsumerInfo: (id) => {
+	getConsumerInfo(id) {
 		utils.request(
 			{
 				url: `member/detail`,
@@ -36,7 +36,7 @@ Page({
 					const consumerInfo = {
 						id,
 						// TODO: shop_id && store
-						shopId: res?.shop_id || 15,
+						shop_id: res?.shop_id || 15,
 						store: res?.store || "小奇测试店铺",
 						phone: res.phone,
 						name: res.username,
@@ -52,7 +52,7 @@ Page({
 			}
 		);
 	},
-	bindStore: () => {
+	bindStore() {
 		const { loginInfo, consumerId, agreement } = this.data;
 		if (agreement) {
 			wx.showModal({
@@ -93,7 +93,8 @@ Page({
 			});
 		}
 	},
-	wxLogin: (loginInfo) => {
+	wxLogin(ev) {
+		const { detail: loginInfo } = ev;
     const { consumerId } = this.data;
 		if (loginInfo?.openId) {
 			this.setData({
@@ -106,17 +107,17 @@ Page({
 			});
 		}
 	},
-	onChangeAgreement: (ev) => {
+	onChangeAgreement(ev) {
 		this.setData({
 			agreement: ev.detail,
 		});
 	},
-	showAgreement: () => {
+	showAgreement() {
 		this.setData({
 			showAgreement: true,
 		});
 	},
-	onCloseAgreement: () => {
+	onCloseAgreement() {
 		this.setData({
 			showAgreement: false,
 		});

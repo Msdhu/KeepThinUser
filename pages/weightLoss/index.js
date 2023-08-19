@@ -1,4 +1,4 @@
-const WxCharts = require('/utils/wxCharts.js');
+const WxCharts = require('../../utils/wxCharts.js');
 const app = getApp();
 const { utils } = app;
 
@@ -178,7 +178,8 @@ Page({
 		});
 	},
 
-	wxLogin: (loginInfo) => {
+	wxLogin(ev) {
+    const { detail: loginInfo } = ev;
     const { consumerInfo } = this.data;
 		this.setData({
       loginInfo,
@@ -189,7 +190,7 @@ Page({
       }
     });
 	},
-	scanCode: () => {
+	scanCode() {
 		this.data.loginInfo?.openId
 			? wx.scanCode({
 					onlyFromCamera: true,

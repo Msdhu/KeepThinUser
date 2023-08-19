@@ -1,11 +1,11 @@
-const utils = require("/utils/util");
+const utils = require("../../utils/util");
 
 Component({
 	properties: {
 		height: {
 			type: Number,
 			value: 0,
-			observer: e => {
+			observer(e) {
 				this.setData({
 					height: e,
 				});
@@ -14,7 +14,7 @@ Component({
 	},
 	data: {},
 	methods: {
-		getUserInfo: () => {
+		getUserInfo() {
 			return new Promise((resolve, reject) => {
 				wx.getUserProfile({
 					desc: "用户登录",
@@ -27,7 +27,7 @@ Component({
 				});
 			});
 		},
-		getLogin: () => {
+		getLogin() {
 			return new Promise((resolve, reject) => {
 				wx.login({
 					success: loginInfo => {
@@ -39,7 +39,7 @@ Component({
 				});
 			});
 		},
-		wxLogin: () => {
+		wxLogin() {
 			if (!wx.getStorageSync("loginInfo")) {
 				Promise.all([this.getLogin(), this.getUserInfo()])
 					.then(([loginInfo, userInfo]) => {
@@ -55,7 +55,7 @@ Component({
 							avatarUrl,
 						});
 						this.triggerEvent("wxLogin", {
-							openId: '123456',
+							openId: '304babc58ab3d08298a6f473300177b3',
 							nickName,
 							avatarUrl,
 						});

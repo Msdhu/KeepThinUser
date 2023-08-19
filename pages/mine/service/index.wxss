@@ -1,0 +1,163 @@
+.wraper {
+	height: 100vh;
+	width: 100%;
+}
+
+.wrap {
+	box-sizing: border-box;
+	padding: 20rpx 30rpx;
+	width: 100%;
+}
+
+.record {
+	background: #fff;
+	border-radius: 20rpx;
+	margin-bottom: 20rpx;
+}
+
+.record,
+.record_title {
+	box-shadow: 0 1px 10px 0 hsla(0, 0%, 80%, 0.2);
+	width: 100%;
+}
+
+.record_title {
+	align-items: center;
+	box-sizing: border-box;
+	display: flex;
+	height: 90rpx;
+	line-height: 90rpx;
+	padding: 0 18rpx;
+}
+
+.record_title > image {
+	height: 32rpx;
+	margin-right: 16rpx;
+	width: 8rpx;
+}
+
+.record_title > view {
+	color: #333;
+	font-size: 32rpx;
+	font-weight: 700;
+}
+
+.record_content {
+	align-items: center;
+	box-sizing: border-box;
+	display: flex;
+	padding: 26rpx 0;
+	width: 100%;
+}
+
+.record_content_position {
+	color: #fdae45;
+	font-size: 32rpx;
+	text-align: center;
+	width: 50%;
+}
+
+.record_content_product {
+	color: #333;
+	font-size: 32rpx;
+	text-align: center;
+	width: 50%;
+}
+
+.record_content_product > view:nth-child(n + 2) {
+	margin-top: 20rpx;
+}
+
+.usage,
+.usage_title {
+	margin-bottom: 20rpx;
+	width: 100%;
+}
+
+.usage_title {
+	align-items: center;
+	display: flex;
+	height: 60rpx;
+	line-height: 60rpx;
+}
+
+.usage_title > image {
+	height: 32rpx;
+	margin-right: 16rpx;
+	width: 8rpx;
+}
+
+.usage_title > view {
+	color: #333;
+	font-size: 32rpx;
+	font-weight: 700;
+}
+
+.usage_title > view:nth-child(3) {
+	align-items: center;
+	background: #fff;
+	border-radius: 60rpx;
+	box-sizing: border-box;
+	color: #fdaf40;
+	display: flex;
+	font-size: 30rpx;
+	height: 60rpx;
+	padding: 15rpx 30rpx;
+}
+
+.usage_content {
+	background: #fff;
+	border-radius: 20rpx;
+}
+
+.usage_content,
+.usage_content_head {
+	box-shadow: 0 1px 10px 0 hsla(0, 0%, 80%, 0.2);
+	width: 100%;
+}
+
+.usage_content_head {
+	align-items: center;
+	box-sizing: border-box;
+	display: flex;
+	height: 90rpx;
+	line-height: 90rpx;
+	padding: 0 18rpx;
+}
+
+.usage_content_head > view {
+	color: #333;
+	font-size: 32rpx;
+	font-weight: 700;
+	text-align: center;
+	width: 33%;
+}
+
+.usage_content_self {
+	align-items: center;
+	box-sizing: border-box;
+	display: flex;
+	height: 75rpx;
+	line-height: 75rpx;
+	padding: 0 20rpx;
+	width: 100%;
+}
+
+.usage_content_self > view {
+	border-bottom: 1rpx solid #f2f2f2;
+	color: #333;
+	font-size: 30rpx;
+	text-align: center;
+	width: 33%;
+}
+
+.usage_content_foot {
+	box-sizing: border-box;
+	color: #333;
+	font-size: 30rpx;
+	height: 92rpx;
+	line-height: 92rpx;
+	padding-right: 32rpx;
+	text-align: right;
+	width: 100%;
+}

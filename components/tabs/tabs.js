@@ -18,15 +18,12 @@ Component({
 		tabIndex: 0,
 	},
 	methods: {
-		tabChange: (e) => {
-			this.setData(
-				{
-					tabIndex: e.currentTarget.dataset.index,
-				},
-				() => {
-					this.triggerEvent("tabChange", this.data.tabIndex);
-				}
-			);
+		tabChange(e) {
+			this.setData({
+				tabIndex: e.currentTarget.dataset.index,
+			}, () => {
+				this.triggerEvent("tabChange", this.data.tabIndex);
+			});
 		},
 	},
 });

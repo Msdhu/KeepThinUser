@@ -5,7 +5,7 @@ Page({
 	data: {
 		showPopup: false,
     loginInfo: {},
-    consumerInfo: {}.
+    consumerInfo: {},
 	},
 	onShow() {
     if (typeof this.getTabBar == "function") {
@@ -18,7 +18,8 @@ Page({
       consumerInfo: wx.getStorageSync("consumerInfo") || {},
     });
 	},
-  wxLogin: (loginInfo) => {
+  wxLogin(ev) {
+		const { detail: loginInfo } = ev;
     const { consumerInfo } = this.data;
 		if (loginInfo?.openId) {
 			this.setData({
@@ -30,7 +31,7 @@ Page({
 			});
 		}
 	},
-  getConsumerInfo: (id) => {
+  getConsumerInfo(id) {
 		utils.request(
 			{
 				url: `member/detail`,
@@ -58,7 +59,7 @@ Page({
 			}
 		);
 	},
-	jumpUrl: (ev) => {
+	jumpUrl(ev) {
 		wx.navigateTo({
       url: ev.currentTarget.dataset.url,
     });

@@ -1,0 +1,32 @@
+<view class="wraper">
+	<van-empty image="search" description="暂无记录" wx:if="{{ historySizeList.length === 0 }}" />
+	<view class="sizeList" wx:for="{{historySizeList}}" wx:key="index">
+		<view class="size_title">
+			<image src="/assets/shugang.png"></image>
+			<view>{{item.createTime}}</view>
+		</view>
+		<view class="size_content">
+			<view class="size_content_head">
+				<view>部位</view>
+				<view>塑形前</view>
+				<view>本次</view>
+				<view>塑形效果</view>
+			</view>
+			<view class="size_content_self" wx:for="{{item.list}}" wx:key="index">
+				<view>{{item.name}}</view>
+				<view>
+					{{item.originSize}}
+					<text>cm</text>
+				</view>
+				<view>
+					{{item.size}}
+					<text>cm</text>
+				</view>
+				<view>
+					{{item.diffSize}}
+					<text>cm</text>
+				</view>
+			</view>
+		</view>
+	</view>
+</view>

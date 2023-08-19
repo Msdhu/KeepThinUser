@@ -5,7 +5,7 @@ Component({
 		selectedColor: "#333333",
 		list: [
 			{
-				pagePath: "pages/weightLoss/index",
+				pagePath: "/pages/weightLoss/index",
 				text: "减重",
 				iconPath: "/assets/jianzhong.png",
 				selectedIconPath: "/assets/jianzhong2.png",
@@ -19,7 +19,7 @@ Component({
 		],
 	},
 	methods: {
-		switchTab: (ev) => {
+		switchTab(ev) {
 			const { path, index } = ev.currentTarget.dataset;
 			this.setData({
 				selected: index,
