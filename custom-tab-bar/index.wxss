@@ -1,0 +1,39 @@
+.tab-bar {
+    background: #fff;
+    bottom: 0;
+    display: flex;
+    height: 48px;
+    left: 0;
+    padding-bottom: env(safe-area-inset-bottom);
+    position: fixed;
+    right: 0;
+}
+
+.tab-bar-border {
+    background-color: rgba(0,0,0,.2);
+    height: 1px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    transform: scaleY(.5);
+    width: 100%;
+}
+
+.tab-bar-item {
+    align-items: center;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+
+.tab-bar-item cover-image {
+    height: 44rpx;
+    width: 44rpx;
+}
+
+.tab-bar-item cover-view {
+    font-size: 10px;
+    margin-top: 10rpx;
+}

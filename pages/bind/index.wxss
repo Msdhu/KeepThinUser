@@ -1,0 +1,101 @@
+.wraper {
+    box-sizing: border-box;
+    height: 100%;
+    padding: 28rpx;
+    width: 100%;
+}
+
+.content {
+    margin-bottom: 30rpx;
+    width: 100%;
+}
+
+.header {
+    align-items: center;
+    display: flex;
+}
+
+.header>image {
+    height: 32rpx;
+    margin-top: 2rpx;
+    width: 8rpx;
+}
+
+.header>view {
+    color: #fdae45;
+    font-size: 32rpx;
+    margin-left: 10rpx;
+}
+
+.con {
+    background: #fff;
+    border-radius: 8rpx;
+    box-shadow: 1rpx 1rpx 18rpx 0 rgba(0,0,0,.04);
+    margin-top: 20rpx;
+    width: 100%;
+}
+
+.con>view {
+    align-items: center;
+    border-bottom: 1rpx solid #fafafa;
+    box-sizing: border-box;
+    color: #333;
+    display: flex;
+    font-size: 32rpx;
+    justify-content: space-between;
+    padding: 34rpx 30rpx;
+}
+
+.bindBtn {
+    height: 80rpx;
+    margin-top: 200rpx;
+    position: relative;
+    width: 100%;
+}
+
+.loginMask {
+    height: 100%;
+    overflow: hidden;
+    padding: 28rpx;
+    text-align: center;
+    width: 100%;
+}
+
+.loginImg,.loginMask {
+    box-sizing: border-box;
+}
+
+.loginImg {
+    height: 200rpx;
+    margin: 60rpx 0;
+    width: 500rpx;
+}
+
+.loginBtn {
+    position: relative;
+}
+
+.login {
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 9;
+}
+
+.agreement {
+    align-items: center;
+    display: flex;
+    font-size: 32rpx;
+    justify-content: center;
+    margin-top: 30rpx;
+}
+
+.agreementContent {
+    font-size: 28rpx;
+}
+
+.agreementContent>view {
+    margin-bottom: 10rpx;
+}

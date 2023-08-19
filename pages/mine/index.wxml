@@ -1,0 +1,32 @@
+<navigation-bar color="{{navigationColor}}" showBack="{{false}}" title="我的"></navigation-bar>
+<view class="wraper">
+  <image class="logo" mode="aspectFill" src="/assets/backGround.png"></image>
+  <view class="userModule">
+    <Login bindwxLogin="wxLogin" class="login" height="203" wx:if="{{!loginInfo.nickName}}"></Login>
+    <view class="userInfo">
+      <image mode="aspectFit" src="{{loginInfo.avatarUrl ? '/assets/logo.png' : '/assets/headPortrait.png'}}"></image>
+      <view class="info">
+        <view wx:if="{{!loginInfo.nickName}}">请登录</view>
+        <view wx:if="{{loginInfo.nickName}}">
+          {{consumerInfo.name ? consumerInfo.name : loginInfo.nickName}}
+        </view>
+        <view wx:if="{{consumerInfo.phone}}">{{consumerInfo.phone}}</view>
+      </view>
+    </view>
+    <view class="isBind" wx:if="{{consumerInfo.id}}">已绑定店铺~</view>
+  </view>
+  <view class="wrap">
+    <view class="serviceList" wx:if="{{consumerInfo.id}}">
+      <view bindtap="jumpUrl" class="serviceList_item" data-url="./service/index">
+        <image src="/assets/fuwuxiangmuBack.png"></image>
+        <view style="color: #FDAC49;">服务项目</view>
+        <image src="/assets/fuwuxiangmu.png"></image>
+      </view>
+      <view bindtap="jumpUrl" class="serviceList_item" data-url="./size/index">
+        <image src="/assets/chicunBack.png"></image>
+        <view style="color: #F75B5C;">塑形尺寸</view>
+        <image src="/assets/chicun.png"></image>
+      </view>
+    </view>
+  </view>
+</view>

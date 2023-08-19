@@ -1,0 +1,197 @@
+.wraper {
+	height: 100%;
+	overflow: hidden;
+	width: 100%;
+}
+
+.logo {
+	height: 356rpx;
+	position: absolute;
+	top: 0;
+	width: 100%;
+	z-index: -1;
+}
+
+.userModule {
+	align-items: center;
+	background: #fff9ed;
+	border-radius: 30rpx;
+	box-shadow: 0 8px 18px 0 hsla(0, 0%, 80%, 0.3);
+	box-sizing: border-box;
+	display: flex;
+	height: 203rpx;
+	justify-content: space-between;
+	margin: 206rpx auto 0;
+	padding: 0 25rpx;
+	position: relative;
+	width: 92%;
+}
+
+.login {
+	height: 100%;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 100%;
+	z-index: 9;
+}
+
+.userInfo {
+	align-items: center;
+	display: flex;
+}
+
+.userInfo > image {
+	height: 114rpx;
+	margin-right: 20rpx;
+	width: 114rpx;
+}
+
+.info {
+	color: #fdbb56;
+}
+
+.info > view:nth-child(1) {
+	font-size: 34rpx;
+	line-height: 48rpx;
+}
+
+.info > view:nth-child(2) {
+	font-size: 30rpx;
+	line-height: 42rpx;
+	margin-top: 5rpx;
+}
+
+.isBind {
+	background: #fdbe57;
+	border-radius: 23rpx;
+	color: #fff;
+	font-size: 30rpx;
+	height: 48rpx;
+	line-height: 48rpx;
+	padding: 0 14rpx;
+	text-align: center;
+}
+
+.isBind,
+.wrap {
+	box-sizing: border-box;
+}
+
+.wrap {
+	margin-top: 14rpx;
+	padding: 0 12rpx;
+	width: 100%;
+}
+
+.healthReport {
+	height: 164rpx;
+	position: relative;
+	width: 100%;
+}
+
+.healthReport > image {
+	height: 100%;
+	width: 100%;
+}
+
+.healthReportCon {
+	box-sizing: border-box;
+	height: 164rpx;
+	justify-content: space-between;
+	margin-top: -82rpx;
+	padding: 0 18rpx;
+	position: absolute;
+	top: 50%;
+	width: 100%;
+}
+
+.healthReportCon,
+.healthReportCon_header {
+	align-items: center;
+	display: flex;
+}
+
+.healthReportCon_header {
+	margin-left: 56rpx;
+}
+
+.healthReportCon_header > image {
+	height: 40rpx;
+	width: 40rpx;
+}
+
+.healthReportCon_header > view {
+	color: #6cd0b2;
+	font-size: 46rpx;
+	margin-left: 20rpx;
+	margin-top: -6rpx;
+	text-align: left;
+}
+
+.healthReportCon_footer {
+	background: #6cd2b3;
+	border-radius: 24rpx 0 0 24rpx;
+	box-sizing: border-box;
+	color: #fff;
+	font-size: 26rpx;
+	height: 50rpx;
+	line-height: 50rpx;
+	padding: 0 16rpx;
+}
+
+.serviceList {
+	flex-wrap: wrap;
+	justify-content: space-between;
+	width: 100%;
+}
+
+.serviceList,
+.serviceList_item {
+	align-items: center;
+	display: flex;
+}
+
+.serviceList_item {
+	height: 180rpx;
+	justify-content: center;
+	position: relative;
+	width: 50%;
+}
+
+.serviceList_item > image:nth-child(1) {
+	height: 100%;
+	position: absolute;
+	top: 0;
+	width: 100%;
+	z-index: -1;
+}
+
+.serviceList_item > view:nth-child(2) {
+	font-size: 36rpx;
+	margin-right: 16rpx;
+}
+
+.serviceList_item > image:nth-child(3) {
+	height: 80rpx;
+	width: 80rpx;
+}
+
+.popupHead {
+	align-items: center;
+	border-bottom: 1rpx solid #e5e5e5;
+	display: flex;
+	height: 99rpx;
+	justify-content: center;
+	position: relative;
+	width: 100%;
+}
+
+.popupHead > image {
+	height: 28rpx;
+	left: 40rpx;
+	margin-top: -10rpx;
+	position: absolute;
+	top: 50%;
+	width: 28rpx;
+}

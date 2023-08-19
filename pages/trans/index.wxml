@@ -1,0 +1,5 @@
+<view class="wrap">
+  <van-transition duration="{{enter: 1500, leave: 500}}" enterActiveClass="van-enter-active-class" enterClass="van-enter-class" leaveActiveClass="van-leave-active-class" leaveToClass="van-leave-to-class" name="fade" show="{{true}}">
+    <image class="logo" mode="aspectFit" src="/assets/logo.png"></image>
+  </van-transition>
+</view>

@@ -1,0 +1,28 @@
+.nav-wrap {
+	background: transparent;
+	position: fixed;
+	width: 100%;
+	z-index: 9999999;
+}
+
+.nav-title {
+	align-items: center;
+	display: flex;
+	flex-direction: row;
+	padding-left: 16px;
+}
+
+.nav-title-back {
+	margin-right: 4rpx;
+	margin-top: 4rpx;
+	width: 42rpx;
+}
+
+.nav-title-text {
+	color: #fff;
+	flex: 1 1 auto;
+	font-size: 34rpx;
+	font-weight: 700;
+	letter-spacing: 2rpx;
+	margin-left: 12rpx;
+}

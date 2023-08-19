@@ -1,0 +1,8 @@
+{
+  "usingComponents": {
+      "navigation-bar": "/components/navigationBar/navigationBar",
+      "Login": "/components/login/login"
+  },
+  "navigationStyle": "custom",
+  "navigationBarTitleText": "减重"
+}

@@ -1,0 +1,113 @@
+<navigation-bar color="{{navigationColor}}" showBack="{{false}}" title="顾客信息"></navigation-bar>
+<view class="wraper">
+  <image class="logo" mode="aspectFill" src="../../assets/weightLossBack.png"></image>
+  <view class="header">
+    <Login bindwxLogin="wxLogin" class="login" height="203" wx:if="{{!loginInfo.nickName}}"></Login>
+    <view class="userInfo">
+      <image class="avatar" mode="aspectFit" src="{{loginInfo.avatarUrl ? '/assets/logo.png' : '/assets/headPortrait.png'}}"></image>
+      <view class="user">
+        <view>
+          {{consumerInfo.name ? consumerInfo.name : loginInfo.nickName ? loginInfo.nickName : '请登录'}}
+        </view>
+        <view wx:if="{{consumerInfo.phone}}">
+          {{fn.formatPhone(consumerInfo.phone, isShowPhone)}}
+          <image bindtap="chageShowPhone" mode="widthFix" src="../../assets/see.png" wx:if="{{!isShowPhone}}"></image>
+          <image bindtap="chageShowPhone" mode="widthFix" src="../../assets/biyanjing.png" wx:else></image>
+        </view>
+      </view>
+    </view>
+    <view class="weightStage" wx:if="{{consumerInfo.id}}">
+      {{consumerDetail.standarded == 3 ? '速减期' : consumerDetail.standarded == 2 ? '匀减期' : '巩固期'}}
+    </view>
+  </view>
+  <view class="weightMeasure">
+    <image mode="aspectFill" src="../../assets/yuanquan.png"></image>
+    <view class="weightMeasure_title">今日体重</view>
+    <view class="weightMeasure_weight">
+      <view>{{currentWeight ? currentWeight : '--'}}</view>
+      <view>斤</view>
+    </view>
+    <view bindtap="scanCode" class="weightMeasure_btn">上称测量</view>
+  </view>
+  <view class="dailyData" wx:if="{{consumerInfo.id}}">
+    <view class="bigDailyData">
+      <view>
+        <view class="bigDailyData_tit">今日减重</view>
+        <view class="bigDailyData_value">
+          {{consumerDetail.todayLossedWeight}}
+          <text>斤</text>
+        </view>
+      </view>
+      <view>
+        <view class="bigDailyData_tit">实际减重</view>
+        <view class="bigDailyData_value">
+          {{consumerDetail.realLossedWeight}}
+          <text>斤</text>
+        </view>
+      </view>
+      <view>
+        <view class="bigDailyData_tit">累计减重</view>
+        <view class="bigDailyData_value">
+          {{consumerDetail.totalLossedWeight}}
+          <text>斤</text>
+        </view>
+      </view>
+      <view>
+        <view class="bigDailyData_tit">累积到店</view>
+        <view class="bigDailyData_value">
+          {{consumerDetail.regiseterCount}}
+          <text>次</text>
+        </view>
+      </view>
+      <view>
+        <view class="bigDailyData_tit">未减斤数</view>
+        <view class="bigDailyData_value">
+          {{consumerDetail.unLossWeight}}
+          <text>斤</text>
+        </view>
+      </view>
+      <view>
+        <view class="bigDailyData_tit">最低体重</view>
+        <view class="bigDailyData_value">
+          {{consumerDetail.lowestWeight}}
+          <text>斤</text>
+        </view>
+      </view>
+    </view>
+    <view class="smallDailyData">
+      <view>
+        <view class="smallDailyData_tit">初始体重</view>
+        <view class="smallDailyData_value">
+          {{consumerDetail.originWeight}}
+          <text>斤</text>
+        </view>
+      </view>
+      <view>
+        <view class="smallDailyData_tit">标准体重</view>
+        <view class="smallDailyData_value">
+          {{consumerDetail.standardWeight}}
+          <text>斤</text>
+        </view>
+      </view>
+      <view>
+        <view class="smallDailyData_tit">应减斤数</view>
+        <view class="smallDailyData_value">
+          {{consumerDetail.loseWeight}}
+          <text>斤</text>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class="canvasCon" style="height: {{windowHeight + 34}}px;" wx:if="{{consumerInfo.id}}">
+    <view>历史体重</view>
+    <view style="text-align: center;" wx:if="{{!chartsObj.y_data}}">暂无历史体重</view>
+    <canvas bindtouchstart="touchcanvas" canvasId="lineCanvas" class="canvas" disableScroll="true"></canvas>
+  </view>
+</view>
+<wxs module="fn">
+  module.exports = ({
+    formatPhone: (function(phone, isShow) {
+      return isShow ? phone : (phone.slice(0,3) + '****' + phone.slice(7, 11))
+    })
+  });
+</wxs>

@@ -1,0 +1,5 @@
+<view class="tabs">
+    <view catchtap="tabChange" class="tab {{item.index == tabIndex ? 'active' : ''}}" data-index="{{item.index}}" wx:for="{{tabsList}}" wx:key="index">
+        {{item.name}}
+    </view>
+</view>

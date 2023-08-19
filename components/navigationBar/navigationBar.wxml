@@ -1,0 +1,6 @@
+<view class="nav-wrap" style="top: {{top}}rpx; height: {{height}}rpx; line-height: {{height}}rpx">
+    <view class="nav-title" style="width: {{left-36}}rpx">
+        <van-icon catchtap="goBack" color="{{color || '#fff'}}" customClass="nav-title-back" name="arrow-left" wx:if="{{showBack}}"></van-icon>
+        <view class="nav-title-text" style="color:{{color}};">{{title}}</view>
+    </view>
+</view>
