@@ -50,12 +50,12 @@ Component({
 
 						// TODO: 测试使用
 						wx.setStorageSync("loginInfo", {
-							openId: '304babc58ab3d08298a6f473300177b3',
+							openId: '95ca5a7c919b654974472440eb11397b',
 							nickName,
 							avatarUrl,
 						});
 						this.triggerEvent("wxLogin", {
-							openId: '304babc58ab3d08298a6f473300177b3',
+							openId: '95ca5a7c919b654974472440eb11397b',
 							nickName,
 							avatarUrl,
 						});
