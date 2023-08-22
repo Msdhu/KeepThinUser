@@ -1,0 +1,70 @@
+.wraper {
+	align-items: center;
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	padding: 50rpx 70rpx;
+	width: 100%;
+}
+
+.head {
+	color: #feb043;
+	font-size: 40rpx;
+	text-align: center;
+}
+
+.weightPeopleImg {
+	height: 618rpx;
+	margin-top: 66rpx;
+	width: 368rpx;
+}
+
+.tips {
+	margin-top: 15rpx;
+	width: 100%;
+}
+
+.tips > view:nth-child(1) {
+	color: #feb043;
+	font-size: 32rpx;
+	margin-bottom: 16rpx;
+}
+
+.tips > view:nth-child(n + 2) {
+	color: #666;
+	font-size: 28rpx;
+	margin-bottom: 12rpx;
+}
+
+.loginMask {
+	height: 100%;
+	overflow: hidden;
+	padding: 28rpx;
+	text-align: center;
+	width: 100%;
+}
+
+.loginImg,
+.loginMask {
+	box-sizing: border-box;
+}
+
+.loginImg {
+	height: 200rpx;
+	margin: 60rpx 0;
+	width: 500rpx;
+}
+
+.loginBtn {
+	position: relative;
+}
+
+.login {
+	height: 100%;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 100%;
+	z-index: 9;
+}

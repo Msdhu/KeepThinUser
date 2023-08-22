@@ -1,0 +1,6 @@
+{
+    "usingComponents": {
+        "Login": "../../../components/login/login"
+    },
+    "navigationBarTitleText": "传输数据"
+}

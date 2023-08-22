@@ -1,0 +1,19 @@
+<view class="wraper">
+    <view class="head">请等待数据传输中...</view>
+    <image class="weightPeopleImg" src="/assets/weightPeople.png"></image>
+    <view class="tips">
+        <view>提示</view>
+        <view>1.电子秤屏幕正常显示</view>
+        <view>2.上称后请平稳站立，不要摇晃身体</view>
+        <view>3.确保手机显示体重后再下称</view>
+    </view>
+    <van-popup customStyle="height: 100%;" position="top" show="{{showLogin}}">
+        <view class="loginMask">
+            <image class="loginImg" mode="widthFix" src="/assets/logo.png"></image>
+            <view class="loginBtn">
+                <van-button round color="#39BC8D" customStyle="width:100%;height:80rpx;border-radius:8rpx !important;font-size:34rpx;" icon="user-circle-o">用户登录</van-button>
+                <Login bindwxLogin="wxLogin" class="login" height="80" wx:if="{{!loginInfo.nickName}}"></Login>
+            </view>
+        </view>
+    </van-popup>
+</view>

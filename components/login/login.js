@@ -49,6 +49,12 @@ Component({
 						const { country, city, language, nickName, avatarUrl, gender, province } = info;
 
 						// TODO: 测试使用
+						wx.showModal({
+							title: 'wx.login 返回的code',
+							content: `${code}`,
+						})
+
+						// TODO: 测试使用
 						wx.setStorageSync("loginInfo", {
 							openId: '95ca5a7c919b654974472440eb11397b',
 							nickName,
