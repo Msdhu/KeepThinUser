@@ -15,8 +15,8 @@ Page({
 			loginInfo: loginInfo || {},
 		})
 		if (opt?.scene) {
-			const query = decodeURIComponent(opt.scene).split("&");
-			const consumerId = query[0].split("=")[1]
+			const query = decodeURIComponent(opt.scene).split("#");
+			const consumerId = query[1];
 			this.setData({
 				showLogin: !loginInfo,
 				consumerId,

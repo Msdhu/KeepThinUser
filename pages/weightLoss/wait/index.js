@@ -19,7 +19,7 @@ Page({
 		deviceId: "",
 	},
 	onLoad() {
-		this.timer = [];
+		this.timer = "";
 
 		wx.getStorageSync("loginInfo")?.openId
 			? this.init()
@@ -58,8 +58,11 @@ Page({
 			this.setData({
 				isDiscoveryStart: true,
 			});
+			wx.showLoading({
+				title: '搜索设备中...',
+			});
 			wx.startBluetoothDevicesDiscovery({
-				services: [ "FEE7" ],
+				// services: [ "FEE7" ],
 				success: () => {
 					this.onBluetoothDeviceFound();
 				}
@@ -67,7 +70,9 @@ Page({
 		}
 	},
 	onBluetoothDeviceFound() {
+		wx.hideLoading();
 		wx.onBluetoothDeviceFound((res) => {
+			console.log('res.devices', res.devices);
 			res.devices.forEach((device) => {
 				// 过滤出满足条件的 devices
 				if ((device.name || device.localName)) {
@@ -85,11 +90,19 @@ Page({
 		this.setData({
 			deviceId,
 		})
+		wx.showLoading({
+			title: '连接设备中...',
+		});
 		wx.createBLEConnection({
 			deviceId,
 			success: () => {
 				this.setData({
 					isBLEConnecting: true,
+				});
+				wx.hideLoading();
+				wx.showToast({
+					title: '连接成功',
+					icon: 'none',
 				});
 				// 连接成功，获取服务
 				this.getBLEDeviceServices(deviceId);
@@ -118,9 +131,7 @@ Page({
 			success: (res) => {
 				res.services.forEach((service) => {
 					const { uuid } = service;
-					if (uuid.indexOf('FEE7') > -1) {
-						this.getBLEDeviceCharacteristics(deviceId, uuid);
-					}
+					this.getBLEDeviceCharacteristics(deviceId, uuid);
 				});
 			}
 		});
@@ -132,7 +143,7 @@ Page({
 			success: (res) => {
 				console.log('characteristics', res.characteristics)
 				res.characteristics.forEach((characteristic) => {
-					if (characteristic.properties.notify || characteristic.properties.indicate) {
+					if ((characteristic.properties.notify || characteristic.properties.indicate) && characteristic.properties.read) {
 						// 必须先启用 wx.notifyBLECharacteristicValueChange 才能监听到设备 onBLECharacteristicValueChange 事件
 						wx.notifyBLECharacteristicValueChange({
 							deviceId,
@@ -142,24 +153,28 @@ Page({
 							type: 'notification',
 							success: () => {
 								wx.onBLECharacteristicValueChange((res) => {
-									const { value } = res;
-									console.log('characteristic', res)
-									console.log('value', ab2hex(value));
+									console.log('value', res?.value);
+									const hexValue = ab2hex(res?.value);
+									console.log('hexValue', hexValue);
+									const normalValue = parseInt(hexValue, '16');
+									console.log('normalValue', normalValue);
 								});
 							},
 						})
+						if (this.timer) {
+							clearInterval(this.timer);
+						}
+						this.timer = ((characteristic) => {
+							return setInterval(() => {
+								wx.readBLECharacteristicValue({
+									deviceId,
+									serviceId,
+									characteristicId: characteristic.uuid,
+								});
+							}, 1000);
+						})(characteristic);
 					}
-					const timer = setInterval((characteristic) => {
-						wx.readBLECharacteristicValue({
-							deviceId,
-							serviceId,
-							characteristicId: characteristic.uuid,
-						});
-					}, 100);
-
-					this.timer.push(timer);
 				});
-				console.log("timer", this.timer);
 			},
 		});
 	},
@@ -180,15 +195,8 @@ Page({
 			});
 		}
 	},
-	clearTimer() {
-		this.timer.length && this.timer.forEach(timer => clearInterval(timer));
-	},
-	onHide() {
-		this.clearTimer();
-		this.cloasBLE();
-	},
+
 	onUnload() {
-		this.clearTimer();
 		this.cloasBLE();
 	},
 	wxLogin(ev) {

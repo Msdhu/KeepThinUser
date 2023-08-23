@@ -10,7 +10,7 @@
                 {
                     "name": "顾客扫码绑定店铺",
                     "pathName": "pages/bind/index",
-                    "query": "scene=id%3D11%26shop_id%3D15",
+                    "query": "scene=15%2311",
                     "launchMode": "default",
                     "scene": null
                 }

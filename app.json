@@ -1,8 +1,8 @@
 {
 	"pages": [
 		"pages/trans/index",
-		"pages/weightLoss/index",
 		"pages/weightLoss/wait/index",
+		"pages/weightLoss/index",
 		"pages/mine/index",
 		"pages/mine/service/index",
 		"pages/mine/size/index",
