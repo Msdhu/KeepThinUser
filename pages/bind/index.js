@@ -15,6 +15,7 @@ Page({
 			loginInfo: loginInfo || {},
 		})
 		if (opt?.scene) {
+			console.log('decodeURIComponent(opt.scene)', decodeURIComponent(opt.scene));
 			const query = decodeURIComponent(opt.scene).split("#");
 			const consumerId = query[1];
 			this.setData({
@@ -35,13 +36,11 @@ Page({
 				success: res => {
 					const consumerInfo = {
 						id,
-						// TODO: shop_id && store
-						shop_id: res?.shop_id || 15,
-						store: res?.store || "小奇测试店铺",
+						shop_id: res?.shop_id,
+						store: res?.shop_name,
 						phone: res.phone,
 						name: res.username,
 						gender: res.sex || '女',
-						age: res.age,
 					};
 					wx.setStorageSync("consumerInfo", consumerInfo);
 					this.setData({
@@ -53,20 +52,19 @@ Page({
 		);
 	},
 	bindStore() {
-		const { loginInfo, consumerId, agreement } = this.data;
+		const { consumerId, agreement, consumerInfo } = this.data;
 		if (agreement) {
 			wx.showModal({
 				title: "提示",
 				content: "绑定后不可随意更改，请确认信息正确。",
-				success: (e) => {
-					if (e.confirm) {
+				success: (res) => {
+					if (res.confirm) {
 						utils.request(
 							{
-								// TODO: url 和 params 修改
-								url: `store/bind`,
+								url: `client/bind-shop`,
 								data: {
 									customer_id: consumerId,
-									open_id: loginInfo.openId,
+									shop_id: consumerInfo.shop_id,
 								},
 								method: "POST",
 								success: res => {
@@ -78,7 +76,7 @@ Page({
 										wx.reLaunch({
 											url: "/pages/weightLoss/index",
 										});
-									}, 1500);
+									}, 1000);
 								},
 								isShowLoading: true,
 							}
@@ -109,7 +107,7 @@ Page({
 	},
 	onChangeAgreement(ev) {
 		this.setData({
-			agreement: ev.detail,
+			agreement: !!ev.detail,
 		});
 	},
 	showAgreement() {

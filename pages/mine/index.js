@@ -42,13 +42,11 @@ Page({
 				success: res => {
 					const consumerInfo = {
 						id,
-						// TODO: shop_id && store
-						shopId: res?.shop_id || 15,
-						store: res?.store || "小奇测试店铺",
+						shop_id: res?.shop_id,
+						store: res?.shop_name,
 						phone: res.phone,
 						name: res.username,
 						gender: res.sex || '女',
-						age: res.age,
 					};
 					wx.setStorageSync("consumerInfo", consumerInfo);
 					this.setData({

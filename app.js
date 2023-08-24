@@ -11,29 +11,6 @@ App({
         globalData.systemInfo = sysInfo;
         globalData.marginTop = (clientInfo.top + clientInfo.height) * ratio;
       },
-      fail: () => {},
-    });
-    const loginInfo = wx.getStorageSync("loginInfo") || {};
-    const consumerInfo = wx.getStorageSync("consumerInfo") || {};
-    if (loginInfo?.openId && consumerInfo?.id) {
-      this.isBind(loginInfo.openId, consumerInfo.id);
-    }
-  },
-  // TODO: 该方法有待商榷
-  isBind (openId, id) {
-    utils.request({
-      // TODO: change url and data
-      url: `shop/index`,
-      data: {
-        consumerId: id,
-      },
-      method: "GET",
-      success: (res = {}) => {
-        // TODO: 判断条件修改
-        if (res.status === 0) {
-          wx.removeStorageSync("consumerInfo");
-        }
-      },
     });
   },
   utils,

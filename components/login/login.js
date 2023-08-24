@@ -43,61 +43,49 @@ Component({
 			if (!wx.getStorageSync("loginInfo")) {
 				Promise.all([this.getLogin(), this.getUserInfo()])
 					.then(([loginInfo, userInfo]) => {
-						console.log(loginInfo, userInfo);
 						const { code } = loginInfo;
-						const { errMsg, rawData, signature, encryptedData, userInfo: info, iv } = userInfo;
-						const { country, city, language, nickName, avatarUrl, gender, province } = info;
-
-						// TODO: 测试使用
-						wx.showModal({
-							title: 'wx.login 返回的code',
-							content: `${code}`,
-						})
-
-						// TODO: 测试使用
-						wx.setStorageSync("loginInfo", {
-							openId: 'd57808dd0e149ec23a67457980bd3e65',
-							nickName,
-							avatarUrl,
-						});
-						this.triggerEvent("wxLogin", {
-							openId: 'd57808dd0e149ec23a67457980bd3e65',
-							nickName,
-							avatarUrl,
-						});
-						return;
+						const { userInfo: info } = userInfo;
+						const { nickName, avatarUrl } = info;
 
 						utils.request({
-							// TODO: change url and data
-							url: `login/index`,
+							url: `client/login`,
 							data: {
-								appid: "wx98da64eff90a57f7",
-								wxCode: code,
-								errMsg,
-								rawData,
-								signature,
-								encryptedData,
-								iv,
-								userInfo: {
-									country,
-									city,
-									language,
-									nickName,
-									avatarUrl,
-									gender,
-									province,
-								},
+								code,
 							},
 							isShowLoading: true,
-							method: "POST",
+							method: "GET",
 							success: res => {
-								wx.setStorageSync("loginInfo", res);
-								this.triggerEvent("wxLogin", res);
+								const loginInfo = {
+									openId: res?.WToken,
+									nickName,
+									avatarUrl,
+								};
+								wx.setStorageSync("loginInfo", loginInfo);
+								this.isBind();
+								this.triggerEvent("wxLogin", loginInfo);
 							},
 						});
 					})
 					.catch(() => {});
 			}
+		},
+		isBind() {
+			utils.request({
+				url: `client/info`,
+				method: "GET",
+				success: (res = {}) => {
+					if (res?.customer_id && res?.shop_id) {
+						wx.setStorageSync("consumerInfo", {
+							id: res?.customer_id,
+							shop_id: res?.shop_id,
+							store: res?.shop_name,
+							phone: res?.phone,
+							name: res?.username,
+							gender: res?.sex || '女',
+						});
+					}
+				},
+			});
 		},
 	},
 });

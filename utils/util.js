@@ -52,16 +52,14 @@ const utils = {
 			: "rgba(0,0,0,1)";
 	},
 	request: (params = {}) => {
-		// TODO: change 
-		const openId = wx.getStorageSync("loginInfo")?.openId;
+		const WToken = wx.getStorageSync("loginInfo")?.openId;
 		let header = {
 			"content-type": "application/json",
 		};
-		if (openId) {
+		if (WToken) {
 			header = {
 				...header,
-				// TODO: change 
-				SToken: openId,
+				WToken,
 			};
 		}
 		const { success, isShowLoading = false, ...resParams } = params;
@@ -79,11 +77,13 @@ const utils = {
 				if (code === 100) {
 					success(resData);
 				} else if (code === 403) {
-          // 后端返回 token 过期
-          wx.showToast({
-						title: msg || "请求失败，请稍后重试",
-						icon: "none",
-					});
+					// TODO: 测试
+					// wx.removeStorageSync('loginInfo');
+          // // 后端返回 token 过期
+          // wx.showToast({
+					// 	title: msg || "请重新登陆",
+					// 	icon: "none",
+					// });
         } else {
 					wx.showToast({
 						title: msg || "请求失败，请稍后重试",

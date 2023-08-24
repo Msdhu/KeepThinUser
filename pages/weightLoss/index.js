@@ -42,7 +42,6 @@ Page({
 			{
 				url: `member/tongji`,
 				data: {
-					// TODO: params 修改
 					shop_id: consumerInfo.shop_id,
 					customer_id: consumerInfo.id,
 					ymd: utils.formatTime(new Date(), "YYYY-MM-DD"),
@@ -90,7 +89,6 @@ Page({
 			{
 				url: `member/weight-history`,
 				data: {
-          // TODO: params 修改
 					shop_id: consumerInfo.shop_id,
 					customer_id: consumerInfo.id,
 				},
@@ -195,7 +193,7 @@ Page({
 			? wx.scanCode({
 					onlyFromCamera: true,
 					success: (res) => {
-            // TODO: 修正 url
+						console.log('scanCodeRes', res);
             wx.navigateTo({
               url: "/" + res.path,
             });
