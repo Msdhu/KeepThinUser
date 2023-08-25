@@ -20,11 +20,11 @@ Page({
 	},
   wxLogin(ev) {
 		const { detail: loginInfo } = ev;
-    const { consumerInfo } = this.data;
+    const consumerInfo = wx.getStorageSync("consumerInfo");
 		if (loginInfo?.openId) {
 			this.setData({
 				loginInfo,
-			} , () => {
+			}, () => {
 				if (consumerInfo?.id) {
 					this.getConsumerInfo(consumerInfo.id);
 				}

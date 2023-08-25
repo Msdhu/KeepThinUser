@@ -178,13 +178,17 @@ Page({
 
 	wxLogin(ev) {
     const { detail: loginInfo } = ev;
-    const { consumerInfo } = this.data;
+    const consumerInfo = wx.getStorageSync("consumerInfo");
 		this.setData({
       loginInfo,
     }, () => {
       if (consumerInfo?.id) {
-        this.getDetailData();
-        this.getWeightHistory();
+				this.setData({
+					consumerInfo,
+				}, () => {
+					this.getDetailData();
+					this.getWeightHistory();
+				});
       }
     });
 	},

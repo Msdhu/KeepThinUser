@@ -61,15 +61,14 @@ Component({
 									avatarUrl,
 								};
 								wx.setStorageSync("loginInfo", loginInfo);
-								this.isBind();
-								this.triggerEvent("wxLogin", loginInfo);
+								this.isBind(loginInfo);
 							},
 						});
 					})
 					.catch(() => {});
 			}
 		},
-		isBind() {
+		isBind(loginInfo) {
 			utils.request({
 				url: `client/info`,
 				method: "GET",
@@ -86,6 +85,7 @@ Component({
 					} else {
 						wx.removeStorageSync("consumerInfo");
 					}
+					this.triggerEvent("wxLogin", loginInfo);
 				},
 			});
 		},
