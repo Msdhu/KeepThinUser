@@ -83,6 +83,8 @@ Component({
 							name: res?.username,
 							gender: res?.sex || '女',
 						});
+					} else {
+						wx.removeStorageSync("consumerInfo");
 					}
 				},
 			});

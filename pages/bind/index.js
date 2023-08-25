@@ -15,7 +15,6 @@ Page({
 			loginInfo: loginInfo || {},
 		})
 		if (opt?.scene) {
-			console.log('decodeURIComponent(opt.scene)', decodeURIComponent(opt.scene));
 			const query = decodeURIComponent(opt.scene).split("#");
 			const consumerId = query[1];
 			this.setData({
@@ -42,7 +41,6 @@ Page({
 						name: res.username,
 						gender: res.sex || '女',
 					};
-					wx.setStorageSync("consumerInfo", consumerInfo);
 					this.setData({
 						consumerInfo,
 					});
@@ -72,6 +70,7 @@ Page({
 										icon: "none",
 										title: "绑定成功!",
 									});
+									wx.setStorageSync("consumerInfo", consumerInfo);
 									setTimeout(() => {
 										wx.reLaunch({
 											url: "/pages/weightLoss/index",

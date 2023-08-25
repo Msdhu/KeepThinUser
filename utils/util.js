@@ -76,14 +76,15 @@ const utils = {
         isShowLoading && wx.hideLoading();
 				if (code === 100) {
 					success(resData);
+				} else if (code === 401) {
+					success();
 				} else if (code === 403) {
-					// TODO: 测试
-					// wx.removeStorageSync('loginInfo');
-          // // 后端返回 token 过期
-          // wx.showToast({
-					// 	title: msg || "请重新登陆",
-					// 	icon: "none",
-					// });
+					wx.removeStorageSync('loginInfo');
+          // 后端返回 token 过期
+          wx.showToast({
+						title: msg || "请重新登陆",
+						icon: "none",
+					});
         } else {
 					wx.showToast({
 						title: msg || "请求失败，请稍后重试",
