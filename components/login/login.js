@@ -40,6 +40,8 @@ Component({
 			});
 		},
 		wxLogin() {
+			wx.removeStorageSync("consumerInfo");
+
 			if (!wx.getStorageSync("loginInfo")) {
 				Promise.all([this.getLogin(), this.getUserInfo()])
 					.then(([loginInfo, userInfo]) => {
@@ -82,8 +84,6 @@ Component({
 							name: res?.username,
 							gender: res?.sex || '女',
 						});
-					} else {
-						wx.removeStorageSync("consumerInfo");
 					}
 					this.triggerEvent("wxLogin", loginInfo);
 				},

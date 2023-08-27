@@ -100,10 +100,6 @@ Page({
 					isBLEConnecting: true,
 				});
 				wx.hideLoading();
-				wx.showToast({
-					title: '连接成功',
-					icon: 'none',
-				});
 				// 连接成功，获取服务
 				this.getBLEDeviceServices(deviceId);
 				this.onBLEConnectionStateChange(device);

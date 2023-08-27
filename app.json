@@ -1,7 +1,7 @@
 {
 	"pages": [
-		"pages/trans/index",
 		"pages/weightLoss/wait/index",
+		"pages/trans/index",
 		"pages/weightLoss/index",
 		"pages/mine/index",
 		"pages/mine/service/index",
