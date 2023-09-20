@@ -1,0 +1,123 @@
+.wraper {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	margin: 0 40px;
+	background-color: #585555;
+	border-radius: 40px;
+}
+
+.device-list {
+	display: flex;
+	height: 100%;
+	padding: 30rpx;
+	flex-direction: column;
+}
+
+.device-item {
+	display: flex;
+	align-items: center;
+	flex-direction: row;
+	margin-bottom: 30rpx;
+	width: 100%;
+	height: 80rpx;
+	min-height: 80rpx;
+	background-color: rgb(160, 155, 155);
+	border-radius: 10rpx;
+	padding-left: 20rpx;
+	box-sizing: border-box;
+}
+
+.btn-up-wrapper, .btn-down-wrapper {
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+}
+
+.left-btn, .mid-btn, .right-btn {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+.bluetooth {
+	background-color: #000;
+	color: #fff;
+	font-size: 28rpx;
+	border: none;
+	border-radius: 30rpx;
+}
+.com {
+	background-color: #000;
+	color: #fff;
+	font-size: 28rpx;
+	border: none;
+	border-radius: 30rpx;
+	text-shadow:	-2px 2px 2px rgb(49 39 21);
+	box-shadow: 0px 4px 0px 0px #86837f;
+	transition: all .1s;
+}
+.com-hover, .press {
+	transform: translate(0, 4px);
+	box-shadow: 0px 1px 0px 0px #86837f;
+}
+.press {
+	background-color: #368451;
+}
+.disabled {
+	opacity: .3;
+	background-color: #000;
+	color: #fff;
+}
+
+.hand, .stop, .width, .hot, .roller, .back-up, .leg-up, .leg-out {
+	margin-bottom: 20rpx;
+}
+.pos, .time, .back-down, .leg-down, .leg-in, .back-up, .leg-up, .leg-out {
+	margin-top: 20rpx;
+}
+
+.btn-mid-wrapper {
+	width: 100%;
+	margin-top: 80rpx;
+}
+
+.up-btn, .down-btn {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	margin-bottom: 50rpx;
+}
+.down-btn {
+	margin-top: 50rpx;
+}
+.mid-btn {
+	display: flex;
+	flex-direction: column;
+}
+.zero-con {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+}
+
+.btn-down-wrapper {
+	margin-top: 50rpx;
+}
+
+.zero-control {
+	margin: 20rpx;
+}
+
+.blue-tooth-btn-wrapper {
+	position: absolute;
+	top: 50rpx;
+	left: 0;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}

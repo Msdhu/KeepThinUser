@@ -1,0 +1,212 @@
+<view class="wraper" bind:tap="onKeyPress">
+	<view class="blue-tooth-btn-wrapper">
+		<button size="mini" class="bluetooth" bind:tap="openBluetoothAdapter">开始搜索设备</button>
+	</view>
+	<view class="btn-up-wrapper">
+		<view class="left-btn">
+			<button 
+				size="mini"
+				hover-class="{{ fn.active(isStart) }}"
+				data-key="HAND"
+				class="{{ fn.class(isStart, 'hand') }}"
+			>手动</button>
+			<button
+				size="mini"
+				hover-class="{{ fn.active(isStart) }}"
+				data-key="POS"
+				class="{{ fn.class(isStart, 'pos') }}"
+			>定位</button>
+		</view>
+		<view class="mid-btn">
+			<button
+				size="mini"
+				hover-class="{{ fn.active(isBLEConnecting, KEY_MAP['SWITCH'].isActive) }}"
+				data-key="SWITCH"
+				class="{{ fn.class(isBLEConnecting, 'switch', KEY_MAP['SWITCH'].isActive) }}"
+			>开关</button>
+		</view>
+		<view class="right-btn">
+			<button
+				size="mini"
+				hover-class="{{ fn.active(isStart, KEY_MAP['STOP'].isActive) }}"
+				data-key="STOP"
+				class="{{ fn.class(isStart, 'stop', KEY_MAP['STOP'].isActive) }}"
+			>暂停</button>
+			<button
+				size="mini"
+				hover-class="{{ fn.active(isStart) }}"
+				data-key="TIME"
+				class="{{ fn.class(isStart, 'time') }}"
+			>定时</button>
+		</view>
+	</view>
+
+	<view class="btn-mid-wrapper">
+		<view class="up-btn">
+			<button
+				size="mini"
+				hover-class="{{ fn.active(isStart) }}"
+				data-key="AUTO"
+				class="{{ fn.class(isStart, 'auto') }}"
+			>自动程序</button>
+			<button
+				size="mini"
+				hover-class="{{ fn.active(isStart) }}"
+				data-key="RECOVER"
+				class="{{ fn.class(isStart, 'recover') }}"
+			>疲劳恢复</button>
+			<button
+				size="mini"
+				hover-class="{{ fn.active(isStart) }}"
+				data-key="ACTIVE"
+				class="{{ fn.class(isStart, 'active') }}"
+			>舒筋活络</button>
+		</view>
+		<view class="mid-btn">
+			<button
+				size="mini"
+				hover-class="{{ fn.active(isStart && isZeroControl) }}"
+				data-key="ZERO_UP_START"
+				class="{{ fn.class(isStart && isZeroControl, 'zero-up') }}"
+			>
+				<van-icon name="arrow-up" />
+			</button>
+			<view class="zero-con">
+				<button
+					size="mini"
+					hover-class="{{ fn.active(isStart && isZeroControl) }}"
+					data-key="ZERO_MINUS"
+					class="{{ fn.class(isStart && isZeroControl, 'zero-minus') }}"
+				>
+					<van-icon name="minus" />
+				</button>
+				<button
+					size="mini"
+					hover-class="{{ fn.active(isStart, KEY_MAP['ZERO_CONTROL'].isActive) }}"
+					data-key="ZERO_CONTROL"
+					class="{{ fn.class(isStart, 'zero-control', KEY_MAP['ZERO_CONTROL'].isActive) }}"
+				>零重力</button>
+				<button
+					size="mini"
+					hover-class="{{ fn.active(isStart && isZeroControl) }}"
+					data-key="ZERO_PLUS"
+					class="{{ fn.class(isStart && isZeroControl, 'zero-plus') }}"
+				>
+					<van-icon name="plus" />
+				</button>
+			</view>
+			<button
+				size="mini"
+				hover-class="{{ fn.active(isStart && isZeroControl) }}"
+				data-key="ZERO_DOWN_START"
+				class="{{ fn.class(isStart && isZeroControl, 'zero-down') }}"
+			>
+				<van-icon name="arrow-down" />
+			</button>
+		</view>
+		<view class="down-btn">
+			<button
+				size="mini"
+				hover-class="{{ fn.active(isStart) }}"
+				data-key="SLEEP"
+				class="{{ fn.class(isStart, 'sleep') }}"
+			>摇摆促眠</button>
+			<button
+				size="mini"
+				hover-class="{{ fn.active(isStart) }}"
+				data-key="RELIEF" class="{{ fn.class(isStart, 'relief') }}"
+			>酸痛缓和</button>
+			<button
+				size="mini"
+				hover-class="{{ fn.active(isStart) }}"
+				data-key="RELAX"
+				class="{{ fn.class(isStart, 'relax') }}"
+			>肩颈放松</button>
+		</view>
+	</view>
+
+	<view class="btn-down-wrapper">
+		<view class="left-btn">
+			<button
+				size="mini"
+				hover-class="{{ fn.active(isStart) }}"
+				data-key="WIDTH" class="{{ fn.class(isStart, 'width') }}"
+			>宽度</button>
+			<button
+				size="mini"
+				class="{{ fn.class(isStart, 'back-up') }}"
+			>背升</button>
+			<button
+				size="mini"
+				class="{{ fn.class(isStart, 'back-down') }}"
+			>背降</button>
+		</view>
+		<view class="mid-btn">
+			<button
+				size="mini"
+				hover-class="{{ fn.active(isStart, KEY_MAP['HOT'].isActive) }}"
+				data-key="HOT"
+				class="{{ fn.class(isStart, 'hot', KEY_MAP['HOT'].isActive) }}"
+			>热敷</button>
+			<button
+				size="mini"
+				class="{{ fn.class(isStart, 'leg-up') }}"
+			>腿升</button>
+			<button
+				size="mini"
+				class="{{ fn.class(isStart, 'leg-down') }}"
+			>腿降</button>
+		</view>
+		<view class="right-btn">
+			<button
+				size="mini"
+				hover-class="{{ fn.active(isStart) }}"
+				data-key="ROLLER" class="{{ fn.class(isStart, 'roller') }}"
+			>滚轮</button>
+			<button
+				size="mini"
+				class="{{ fn.class(isStart, 'leg-out') }}"
+			>腿伸</button>
+			<button
+				size="mini"
+				class="{{ fn.class(isStart, 'leg-in') }}"
+			>腿缩</button>
+		</view>
+	</view>
+
+	<van-popup
+		show="{{ show }}"
+		position="left"
+		custom-style="width: 70%; height: 100%;"
+		bind:close="onClose"
+	>
+		<view class="device-list">
+			<view wx:for="{{devices}}" wx:key="index" bindtap="onCreateBLEConnection" class="device-item" data-device-id="{{item.deviceId}}" data-index="{{index}}">
+				<van-icon name="bar-chart-o" />
+				<text style="font-size: 32rpx; color: #000; font-weight: bold; padding-left: 6rpx">{{item.name || item.localName}}</text>
+			</view>
+		</view>
+	</van-popup>
+</view>
+
+<wxs module="fn">
+  module.exports = ({
+    class: function(isStart, name, isActive = false) {
+			var className = "com" + " " + name;
+      if (!isStart) {
+				className += " disabled";
+			}
+			if (isActive) {
+				className += " press";
+			}
+			return className;
+    },
+		active: function(isStart, isActive = false) {
+			var className = "";
+      if (isStart && !isActive) {
+				className += "com-hover";
+			}
+			return className;
+    },
+  });
+</wxs>
