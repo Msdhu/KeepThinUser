@@ -1,40 +1,53 @@
-const utils = require("../../../utils/util");
-
 // ArrayBuffer 转 16进制字符串数组
 const ab2hex = buffer => {
 	const hexArr = Array.prototype.map.call(new Uint8Array(buffer), bit => ("00" + bit.toString(16)).slice(-2));
 	return hexArr;
 };
 
-const keepKey = ['SWITCH', 'STOP', 'ZERO_CONTROL', 'HOT'];
+const autoSwitchKey = ["RECOVER", "ACTIVE", "SLEEP", "RELIEF", "RELAX", "SPINE"];
+const keepKey = ["SWITCH", "HAND", "STOP", "HOT", ...autoSwitchKey];
 
 Page({
 	data: {
 		KEY_MAP: {
 			SWITCH: { value: 0x01, isActive: false, },
 			HAND: { value: 0x20, isActive: false, },
-			POS: { value: 0x2a, isActive: false, },
-			STOP: { value: 0x70, isActive: false, },
-			TIME: { value: 0x56, isActive: false, },
-			AUTO: { value: 0x10, isActive: false, },
+			// 全局(isFull)，局部(isPart)，定点(isPoint)
+			POS: { value: 0x2a, isFull: false, isPart: false, isPoint: false },
+			// 暂停，正揉(isKnead)/捶打(isKnock)/滚压(isKpress)
+			STOP: { value: 0x70, isActive: false, isKnead: false, isKnock: false, isKpress: false },
+			TIME: { value: 0x56 },
 			RECOVER: { value: 0x11, isActive: false, },
 			ACTIVE: { value: 0x12, isActive: false, },
 			SLEEP: { value: 0x13, isActive: false, },
 			RELIEF: { value: 0x14, isActive: false, },
 			RELAX: { value: 0x15, isActive: false, },
-			WIDTH: { value: 0x2e, isActive: false, },
-			"ZERO_CONTROL": { value: 0x73, isActive: false, },
-			"ZERO_PLUS": { value: 0x38, isActive: false, },
-			"ZERO_MINUS": { value: 0x39, isActive: false, },
-			"ZERO_UP_START": { value: 0x60, isActive: false, },
-			"ZERO_UP_END": { value: 0x61, isActive: false, },
-			"ZERO_DOWN_START": { value: 0x62, isActive: false, },
-			"ZERO_DOWN_END": { value: 0x63, isActive: false, },
+			SPINE: { value: 0x16, isActive: false, },
+			WIDTH: { value: 0x2e },
+			"ZERO": { value: 0x73 },
+			"SPEED_INC": { value: 0x38 },
+			"SPEED_DEC": { value: 0x39 },
+			"WALK_UP_START": { value: 0x60 },
+			"WALK_UP_END": { value: 0x61 },
+			"WALK_DOWN_START": { value: 0x62 },
+			"WALK_DOWN_END": { value: 0x63 },
+			"BACK_UP_START": { value: 0x64 },
+			"BACK_UP_END": { value: 0x65 },
+			"BACK_DOWN_START": { value: 0x66 },
+			"BACK_DOWN_END": { value: 0x67 },
+			"LEG_UP_START": { value: 0x68 },
+			"LEG_UP_END": { value: 0x69 },
+			"LEG_DOWN_START": { value: 0x6a },
+			"LEG_DOWN_END": { value: 0x6b },
+			"LEG_EXTEND_UP_START": { value: 0x6c },
+			"LEG_EXTEND_UP_END": { value: 0x6d },
+			"LEG_EXTEND_DOWN_START": { value: 0x6e },
+			"LEG_EXTEND_DOWN_END": { value: 0x6f },
 			HOT: { value: 0x75, isActive: false, },
-			ROLLER: { value: 0x3a, isActive: false, },
+			ROLLER: { value: 0x3a },
 		},
 		isStart: false,
-		isZeroControl: false,
+		isHand: false,
 		isOpenBluetoothAdapter: false,
 		isBLEConnecting: false,
 		isDiscoveryStart: false,
@@ -43,6 +56,10 @@ Page({
 		serviceId: "",
 		characteristicId: "",
 		show: false,
+
+		disabledSpeed: true,
+		disabledWidthSwitch: true,
+		disabledWalk: true,
 	},
 	onClose() {
 		this.setData({
@@ -106,22 +123,34 @@ Page({
 			});
 		});
 	},
-	onKeyPress: utils.throttle(function (ev) {
-		const key = ev.target.dataset?.key;
-		// 是否绑定了 touchstart 和 touchend 事件
-		const hasBindTouch = !!ev.target.dataset?.hasBindTouch;
-		if (hasBindTouch) return;
-
+	onKeyPress(ev) {
+		const key = ev.target.dataset?.start;
 		key && this.writeBLECharacteristicValue(key);
-	}, 500),
+	},
+	onKeyUp(ev) {
+		const key = ev.target.dataset?.end;
+		key && this.writeBLECharacteristicValue(key);
+	},
 	writeBLECharacteristicValue(key) {
-		const { deviceId, serviceId, characteristicId, isBLEConnecting, isStart, isZeroControl, KEY_MAP } = this.data;
+		console.log('key', key);
+		const { deviceId, serviceId, characteristicId, isBLEConnecting, isStart, isHand, KEY_MAP } = this.data;
 		// 蓝牙是否连接
 		if (!(isBLEConnecting && deviceId && serviceId && characteristicId)) return;
 		// 其他按钮必须要在开关按键生效后才可以点击
-		if (key !== 'SWITCH' && !isStart) return;
-		// 控制零重力的按钮必须在零重力按键生效后才可以点击
-		if (key !== 'ZERO_CONTROL' && /ZERO/.test(key) && !isZeroControl) return
+		if (
+			key !== "SWITCH" &&
+			![
+				"ZERO",
+				"BACK_UP_START",
+				"BACK_DOWN_START",
+				"LEG_UP_START",
+				"LEG_DOWN_START",
+				"LEG_EXTEND_UP_START",
+				"LEG_EXTEND_DOWN_START",
+			].includes(key) &&
+			!isStart
+		)
+			return;
 
 		// create buffer data
 		const buffer = new ArrayBuffer(4); // 缓冲区； 4 字节
@@ -137,7 +166,23 @@ Page({
 			characteristicId,
 			value: buffer,
 			success: () => {
-				if (key === 'SWITCH') {
+				if (keepKey.includes(key)) {
+					this.setData({
+						[`KEY_MAP.${key}.isActive`]: !KEY_MAP[key].isActive,
+					});
+				}
+				if (autoSwitchKey.includes(key)) {
+					this.setData({
+						...autoSwitchKey.reduce((res, x) => {
+							if (key !== x) {
+								res[`KEY_MAP.${x}.isActive`] = false;
+							}
+							return res;
+						}, {}),
+					});
+				}
+				// 开关
+				if (key === "SWITCH") {
 					this.setData({
 						isStart: !KEY_MAP[key].isActive,
 					}, () => {
@@ -147,20 +192,29 @@ Page({
 									res[`KEY_MAP.${key}.isActive`] = false;
 									return res;
 								}, {}),
-								isZeroControl: false,
+								isHand: false,
 							});
 						}
 					});
 				}
-				if (key === 'ZERO_CONTROL') {
+				// 手动
+				if (key === "HAND") {
 					this.setData({
-						isZeroControl: !isZeroControl,
-					});
-				}
-				// 回弹按下的按钮
-				if (keepKey.includes(key)) {
-					this.setData({
-						[`KEY_MAP.${key}.isActive`]: !KEY_MAP[key].isActive,
+						isHand: !isHand,
+					}, () => {
+						const { isKnead, isKnock, isKpress } = KEY_MAP["STOP"];
+						const { isPart, isPoint } = KEY_MAP["POS"];
+
+						// isHand: true(手动) / false(自动)
+						const { isHand } = this.data;
+						this.setData({
+							// 手动 + 按摩手法：滚压 -> 按摩速度(+/-)按钮 disabled
+							disabledSpeed: !isHand || isKpress,
+							// 手动 + 按摩手法: !(正揉(isKnead) || 捶打(isKnock) || 滚压(isKpress)) -> 宽度调节按钮 disabled
+							disabledWidthSwitch: !isHand || !(isKnead || isKnock || isKpress),
+							// 手动 + 机芯按摩位置：!(局部(isPart) || 定点(isPoint)) -> 向上/向下调节按钮 disabled
+							disabledWalk: !isHand || !(isPart || isPoint),
+						});
 					});
 				}
 			},
@@ -249,15 +303,43 @@ Page({
 									/*
 									 * 十六进制 转 十进制 parseInt(0xFF, 16)
 									 * 十进制 转 二进制 (十进制数).toString(2)
-									*/
-									// 开关状态
-									const isSwitchKeyPress = (parseInt(hexArr[2], 16) & 0b01000000) === Number(0b01000000);
-									// 2 表示 暂停状态，即暂停按钮被按下，0 表示 运行状态
-									const isStopKeyPress = (parseInt(hexArr[2], 16) & 0b00000010) === Number(0b00000010);
+									 */
+									// 开关状态 ([2: 6])
+									const isSwitchKeyPress = ((parseInt(hexArr[2], 16) >>> 6) ^ 0b00000001) === 0;
+									// 2 表示 暂停状态，即暂停按钮被按下，0 表示 运行状态 ([2: 2])
+									const isStopKeyPress = ((parseInt(hexArr[2], 16) << 6) ^ 0b10000000) === 0;
+									// 手动 ([14: 2 ~ 6])
+									const isHandKeyPress = ((parseInt(hexArr[14], 16) >>> 2) ^ 0b00011111) === 0;
+									// 热敷 ([3: 6])
+									const isHotKeyPress = ((parseInt(hexArr[3], 16) >>> 6) ^ 0b00000001) === 0;
+
+									// 机芯按摩位置(定位 [4: 3 ~ 5]): 局部(isPart)，定点(isPoint)
+									const isPart = ((parseInt(hexArr[4], 16) & 0b00111000) ^ 0b00010000) === 0;
+									const isPoint = ((parseInt(hexArr[4], 16) & 0b00111000) ^ 0b00011000) === 0;
+
+									// 按摩手法([2: 2 ~ 5]): 正揉(isKnead)/捶打(isKnock)/滚压(isKpress)
+									const isKnead = ((parseInt(hexArr[2], 16) >>> 2) ^ 0b00000001) === 0;
+									const isKnock = ((parseInt(hexArr[2], 16) >>> 2) ^ 0b00000010) === 0;
+									const isKpress = ((parseInt(hexArr[2], 16) >>> 2) ^ 0b00000101) === 0;
 									this.setData({
-										isStart: isSwitchKeyPress,
 										"KEY_MAP.SWITCH.isActive": isSwitchKeyPress,
 										"KEY_MAP.STOP.isActive": isStopKeyPress,
+										"KEY_MAP.HAND.isActive": isHandKeyPress,
+										"KEY_MAP.HOT.isActive": isHotKeyPress,
+										...autoSwitchKey.reduce((res, key, index) => {
+											// 0b00000100 - 0b00011000 (01 - 06 自动程序)
+											const flag = ((parseInt(hexArr[14], 16) & 0b01111100) ^ (0b00000100 + index * 4)) === 0;
+											res[`KEY_MAP.${key}.isActive`] = flag;
+											return res;
+										}, {}),
+										isStart: isSwitchKeyPress,
+										isHand: isHandKeyPress,
+										// 手动 + 按摩手法：滚压 -> 按摩速度(+/-)按钮 disabled
+										disabledSpeed: !isHandKeyPress || isKpress,
+										// 手动 + 按摩手法: !(正揉(isKnead) || 捶打(isKnock) || 滚压(isKpress)) -> 宽度调节按钮 disabled
+										disabledWidthSwitch: !isHandKeyPress || !(isKnead || isKnock || isKpress),
+										// 手动 + 机芯按摩位置：!(局部(isPart) || 定点(isPoint)) -> 向上/向下调节按钮 disabled
+										disabledWalk: !isHandKeyPress || !(isPart || isPoint),
 									});
 								});
 							},

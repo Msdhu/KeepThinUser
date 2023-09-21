@@ -72,10 +72,10 @@
 	color: #fff;
 }
 
-.hand, .stop, .width, .hot, .roller, .back-up, .leg-up, .leg-out {
+.hand, .stop, .width, .hot, .roller, .leg-extend-up, .back-up, .leg-up {
 	margin-bottom: 20rpx;
 }
-.pos, .time, .back-down, .leg-down, .leg-in, .back-up, .leg-up, .leg-out {
+.pos, .time, .back-down, .leg-down, .leg-extend-up, .back-up, .leg-up, .leg-extend-down {
 	margin-top: 20rpx;
 }
 
@@ -108,7 +108,7 @@
 	margin-top: 50rpx;
 }
 
-.zero-control {
+.zero {
 	margin: 20rpx;
 }
 
