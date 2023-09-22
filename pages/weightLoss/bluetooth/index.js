@@ -1,32 +1,34 @@
+const worker = wx.createWorker('workers/index.js')
+
 // ArrayBuffer 转 16进制字符串数组
 const ab2hex = buffer => {
 	const hexArr = Array.prototype.map.call(new Uint8Array(buffer), bit => ("00" + bit.toString(16)).slice(-2));
 	return hexArr;
 };
 
-const autoSwitchKey = ["RECOVER", "ACTIVE", "SLEEP", "RELIEF", "RELAX", "SPINE"];
-const keepKey = ["SWITCH", "HAND", "STOP", "HOT", ...autoSwitchKey];
+const autoSwitchKey = ["ACTIVE", "SLEEP", "RELIEF", "RELAX", "SPINE", "PRESS"];
+const keepKey = ["SWITCH", "STOP", "HOT", ...autoSwitchKey];
 
 Page({
 	data: {
 		KEY_MAP: {
 			SWITCH: { value: 0x01, isActive: false, },
-			HAND: { value: 0x20, isActive: false, },
+			HAND: { value: 0x20, },
 			// 全局(isFull)，局部(isPart)，定点(isPoint)
 			POS: { value: 0x2a, isFull: false, isPart: false, isPoint: false },
 			// 暂停，正揉(isKnead)/捶打(isKnock)/滚压(isKpress)
 			STOP: { value: 0x70, isActive: false, isKnead: false, isKnock: false, isKpress: false },
 			TIME: { value: 0x56 },
-			RECOVER: { value: 0x11, isActive: false, },
 			ACTIVE: { value: 0x12, isActive: false, },
 			SLEEP: { value: 0x13, isActive: false, },
 			RELIEF: { value: 0x14, isActive: false, },
 			RELAX: { value: 0x15, isActive: false, },
 			SPINE: { value: 0x16, isActive: false, },
+			PRESS: { value: 0x17, isActive: false, },
 			WIDTH: { value: 0x2e },
 			"ZERO": { value: 0x73 },
-			"SPEED_INC": { value: 0x38 },
-			"SPEED_DEC": { value: 0x39 },
+			"SPEED_INC": { value: 0x39 },
+			"SPEED_DEC": { value: 0x38 },
 			"WALK_UP_START": { value: 0x60 },
 			"WALK_UP_END": { value: 0x61 },
 			"WALK_DOWN_START": { value: 0x62 },
@@ -46,8 +48,6 @@ Page({
 			HOT: { value: 0x75, isActive: false, },
 			ROLLER: { value: 0x3a },
 		},
-		isStart: false,
-		isHand: false,
 		isOpenBluetoothAdapter: false,
 		isBLEConnecting: false,
 		isDiscoveryStart: false,
@@ -56,10 +56,35 @@ Page({
 		serviceId: "",
 		characteristicId: "",
 		show: false,
-
+		// 是否开机复位中
+		isPowerReset: false,
+		// 是否体型检测中
+		isDetecting: false,
+		isStart: false,
+		isHand: false,
 		disabledSpeed: true,
 		disabledWidthSwitch: true,
 		disabledWalk: true,
+	},
+	onShow() {
+		worker.onMessage((res) => {
+			if (this.data.isPowerReset) {
+				wx.showLoading({
+					title: '关机复位中',
+				});
+			} else {
+				wx.hideLoading();
+			}
+			if (this.data.isDetecting) {
+				wx.showLoading({
+					title: '体型检测中',
+				});
+			} else {
+				wx.hideLoading();
+			}
+
+			this.setData({ ...res });
+		});
 	},
 	onClose() {
 		this.setData({
@@ -124,33 +149,21 @@ Page({
 		});
 	},
 	onKeyPress(ev) {
-		const key = ev.target.dataset?.start;
+		const { disabled, start: key } = ev.target.dataset;
+		if (disabled) return;
+
 		key && this.writeBLECharacteristicValue(key);
 	},
 	onKeyUp(ev) {
-		const key = ev.target.dataset?.end;
+		const { disabled, end: key } = ev.target.dataset;
+		if (disabled) return;
+
 		key && this.writeBLECharacteristicValue(key);
 	},
 	writeBLECharacteristicValue(key) {
-		console.log('key', key);
-		const { deviceId, serviceId, characteristicId, isBLEConnecting, isStart, isHand, KEY_MAP } = this.data;
+		const { deviceId, serviceId, characteristicId, isBLEConnecting, isHand, KEY_MAP } = this.data;
 		// 蓝牙是否连接
 		if (!(isBLEConnecting && deviceId && serviceId && characteristicId)) return;
-		// 其他按钮必须要在开关按键生效后才可以点击
-		if (
-			key !== "SWITCH" &&
-			![
-				"ZERO",
-				"BACK_UP_START",
-				"BACK_DOWN_START",
-				"LEG_UP_START",
-				"LEG_DOWN_START",
-				"LEG_EXTEND_UP_START",
-				"LEG_EXTEND_DOWN_START",
-			].includes(key) &&
-			!isStart
-		)
-			return;
 
 		// create buffer data
 		const buffer = new ArrayBuffer(4); // 缓冲区； 4 字节
@@ -179,6 +192,7 @@ Page({
 							}
 							return res;
 						}, {}),
+						isHand: false,
 					});
 				}
 				// 开关
@@ -300,46 +314,9 @@ Page({
 								wx.onBLECharacteristicValueChange(res => {
 									const hexArr = ab2hex(res?.value) || [];
 									if (hexArr.length === 4) return;
-									/*
-									 * 十六进制 转 十进制 parseInt(0xFF, 16)
-									 * 十进制 转 二进制 (十进制数).toString(2)
-									 */
-									// 开关状态 ([2: 6])
-									const isSwitchKeyPress = ((parseInt(hexArr[2], 16) >>> 6) ^ 0b00000001) === 0;
-									// 2 表示 暂停状态，即暂停按钮被按下，0 表示 运行状态 ([2: 2])
-									const isStopKeyPress = ((parseInt(hexArr[2], 16) << 6) ^ 0b10000000) === 0;
-									// 手动 ([14: 2 ~ 6])
-									const isHandKeyPress = ((parseInt(hexArr[14], 16) >>> 2) ^ 0b00011111) === 0;
-									// 热敷 ([3: 6])
-									const isHotKeyPress = ((parseInt(hexArr[3], 16) >>> 6) ^ 0b00000001) === 0;
 
-									// 机芯按摩位置(定位 [4: 3 ~ 5]): 局部(isPart)，定点(isPoint)
-									const isPart = ((parseInt(hexArr[4], 16) & 0b00111000) ^ 0b00010000) === 0;
-									const isPoint = ((parseInt(hexArr[4], 16) & 0b00111000) ^ 0b00011000) === 0;
-
-									// 按摩手法([2: 2 ~ 5]): 正揉(isKnead)/捶打(isKnock)/滚压(isKpress)
-									const isKnead = ((parseInt(hexArr[2], 16) >>> 2) ^ 0b00000001) === 0;
-									const isKnock = ((parseInt(hexArr[2], 16) >>> 2) ^ 0b00000010) === 0;
-									const isKpress = ((parseInt(hexArr[2], 16) >>> 2) ^ 0b00000101) === 0;
-									this.setData({
-										"KEY_MAP.SWITCH.isActive": isSwitchKeyPress,
-										"KEY_MAP.STOP.isActive": isStopKeyPress,
-										"KEY_MAP.HAND.isActive": isHandKeyPress,
-										"KEY_MAP.HOT.isActive": isHotKeyPress,
-										...autoSwitchKey.reduce((res, key, index) => {
-											// 0b00000100 - 0b00011000 (01 - 06 自动程序)
-											const flag = ((parseInt(hexArr[14], 16) & 0b01111100) ^ (0b00000100 + index * 4)) === 0;
-											res[`KEY_MAP.${key}.isActive`] = flag;
-											return res;
-										}, {}),
-										isStart: isSwitchKeyPress,
-										isHand: isHandKeyPress,
-										// 手动 + 按摩手法：滚压 -> 按摩速度(+/-)按钮 disabled
-										disabledSpeed: !isHandKeyPress || isKpress,
-										// 手动 + 按摩手法: !(正揉(isKnead) || 捶打(isKnock) || 滚压(isKpress)) -> 宽度调节按钮 disabled
-										disabledWidthSwitch: !isHandKeyPress || !(isKnead || isKnock || isKpress),
-										// 手动 + 机芯按摩位置：!(局部(isPart) || 定点(isPoint)) -> 向上/向下调节按钮 disabled
-										disabledWalk: !isHandKeyPress || !(isPart || isPoint),
+									worker.postMessage({
+										data: hexArr,
 									});
 								});
 							},

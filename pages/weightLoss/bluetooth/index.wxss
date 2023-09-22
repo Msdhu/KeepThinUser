@@ -59,11 +59,11 @@
 	box-shadow: 0px 4px 0px 0px #86837f;
 	transition: all .1s;
 }
-.com-hover, .press {
+.com-hover, .key-down {
 	transform: translate(0, 4px);
 	box-shadow: 0px 1px 0px 0px #86837f;
 }
-.press {
+.key-down {
 	background-color: #368451;
 }
 .disabled {

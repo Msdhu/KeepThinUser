@@ -40,7 +40,8 @@
 		"van-switch": "./miniprogram_npm/@vant/weapp/switch/index",
 		"van-steps": "./miniprogram_npm/@vant/weapp/steps/index",
 		"van-transition": "./miniprogram_npm/@vant/weapp/transition/index",
-		"van-empty": "./miniprogram_npm/@vant/weapp/empty/index"
+		"van-empty": "./miniprogram_npm/@vant/weapp/empty/index",
+		"van-overlay": "./miniprogram_npm/@vant/weapp/overlay/index"
 	},
 	"tabBar": {
 		"custom": true,
@@ -57,5 +58,6 @@
 				"text": "我的"
 			}
 		]
-	}
+	},
+	"workers": "workers"
 }
