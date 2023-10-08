@@ -1,7 +1,7 @@
 {
 	"pages": [
-		"pages/weightLoss/bluetooth/index",
 		"pages/trans/index",
+		"pages/weightLoss/bluetooth/index",
 		"pages/weightLoss/index",
 		"pages/weightLoss/wait/index",
 		"pages/mine/index",

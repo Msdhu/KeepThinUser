@@ -1,7 +1,4 @@
 {
-    "usingComponents": {
-        "Login": "../../../components/login/login"
-    },
-    "navigationBarTitleText": "传输数据",
+    "navigationBarTitleText": "遥控器",
     "disableScroll": true
 }
