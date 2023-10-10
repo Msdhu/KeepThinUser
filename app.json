@@ -1,7 +1,6 @@
 {
 	"pages": [
 		"pages/trans/index",
-		"pages/weightLoss/bluetooth/index",
 		"pages/weightLoss/index",
 		"pages/weightLoss/wait/index",
 		"pages/mine/index",
@@ -58,6 +57,5 @@
 				"text": "我的"
 			}
 		]
-	},
-	"workers": "workers"
+	}
 }

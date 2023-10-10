@@ -1,14 +1,10 @@
 const app = getApp();
 const { utils } = app;
 
-// ArrayBuffer转16进度字符串示例
-const ab2hex = (buffer) => {
-  const hexArr = Array.prototype.map.call(
-    new Uint8Array(buffer),
-    bit => ('00' + bit.toString(16)).slice(-2)
-  )
-  return hexArr.join('');
-}
+// ArrayBuffer 转 16进制字符串数组
+const ab2hex = buffer => {
+	return Array.prototype.map.call(new Uint8Array(buffer), bit => ("00" + bit.toString(16)).slice(-2));
+};
 
 Page({
 	data: {
@@ -17,20 +13,28 @@ Page({
 		isOpenBluetoothAdapter: false,
 		isBLEConnecting: false,
 		deviceId: "",
+		devices: [],
+		show: false,
+		weight: 0,
+		isKilo: false,
 	},
 	onLoad() {
-		this.timer = "";
-
-		wx.getStorageSync("loginInfo")?.openId
-			? this.init()
-			: this.setData({
-					showLogin: true,
-			  });
+		if (!wx.getStorageSync("loginInfo")?.openId) {
+			this.setData({
+				showLogin: true,
+				consumerInfo: wx.getStorageSync("consumerInfo") || {},
+			});
+		}
 	},
-	init() {
-		this.openBluetoothAdapter();
+	onClose() {
+		this.setData({
+			show: false,
+		});
 	},
 	openBluetoothAdapter() {
+		this.setData({
+			show: true,
+		});
 		wx.openBluetoothAdapter({
 			mode: 'central',
 			success: () => {
@@ -40,7 +44,6 @@ Page({
 				this.startBluetoothDevicesDiscovery();
 			},
 			fail: e => {
-				console.log(e)
 				if (e.errCode === 10001) {
 					wx.showToast({
 						title: "请打开蓝牙",
@@ -62,7 +65,6 @@ Page({
 				title: '搜索设备中...',
 			});
 			wx.startBluetoothDevicesDiscovery({
-				// services: [ "FEE7" ],
 				success: () => {
 					this.onBluetoothDeviceFound();
 				}
@@ -72,109 +74,112 @@ Page({
 	onBluetoothDeviceFound() {
 		wx.hideLoading();
 		wx.onBluetoothDeviceFound((res) => {
-			console.log('res.devices', res.devices);
-			res.devices.forEach((device) => {
-				// 过滤出满足条件的 devices
-				if ((device.name || device.localName)) {
-					this.createBLEConnection(device);
-					wx.stopBluetoothDevicesDiscovery();
-					this.setData({
-						isDiscoveryStart: false,
-					});
+			const { devices } = this.data;
+			res.devices.forEach(device => {
+				const name = device.name || device.localName;
+				if (name && /YANGSHOU-/.test(name)) {
+					if (devices.findIndex(item => item.deviceId === device.deviceId) === -1) {
+						devices.push(device);
+					}
 				}
+			});
+			this.setData({
+				devices: devices.sort((e, t) => t.RSSI - e.RSSI),
 			});
 		});
 	},
-	createBLEConnection(device) {
-		const { deviceId } = device;
+	onCreateBLEConnection(ev) {
+		const deviceId = ev.currentTarget.dataset.deviceId;
 		this.setData({
 			deviceId,
-		})
+			isDiscoveryStart: false,
+		});
+		wx.stopBluetoothDevicesDiscovery();
+		this.createBLEConnection(deviceId);
+	},
+	createBLEConnection(deviceId) {
 		wx.showLoading({
-			title: '连接设备中...',
+			title: "连接设备中...",
 		});
 		wx.createBLEConnection({
 			deviceId,
 			success: () => {
 				this.setData({
 					isBLEConnecting: true,
+					show: false,
 				});
 				wx.hideLoading();
 				// 连接成功，获取服务
 				this.getBLEDeviceServices(deviceId);
-				this.onBLEConnectionStateChange(device);
+				this.onBLEConnectionStateChange(deviceId);
 			},
 			fail: () => {
 				wx.showToast({
 					title: "连接失败",
-					icon: "none"
+					icon: "none",
 				});
-			}
+			},
 		});
 	},
-	onBLEConnectionStateChange(device) {
-		wx.onBLEConnectionStateChange((res) => {
+	onBLEConnectionStateChange(deviceId) {
+		wx.onBLEConnectionStateChange(res => {
 			// 该方法回调中可以用于处理连接意外断开等异常情况
 			if (!res.connected) {
-				console.log('onBLEConnectionStateChange', res)
-				this.createBLEConnection(device);
+				this.createBLEConnection(deviceId);
 			}
 		});
 	},
 	getBLEDeviceServices(deviceId) {
 		wx.getBLEDeviceServices({
 			deviceId,
-			success: (res) => {
-				res.services.forEach((service) => {
+			success: res => {
+				res.services.forEach(service => {
 					const { uuid } = service;
 					this.getBLEDeviceCharacteristics(deviceId, uuid);
 				});
-			}
+			},
 		});
 	},
 	getBLEDeviceCharacteristics(deviceId, serviceId) {
 		wx.getBLEDeviceCharacteristics({
 			deviceId,
 			serviceId,
-			success: (res) => {
-				console.log('characteristics', res.characteristics)
-				res.characteristics.forEach((characteristic) => {
-					if ((characteristic.properties.notify || characteristic.properties.indicate) && characteristic.properties.read) {
+			success: res => {
+				res.characteristics.forEach(characteristic => {
+					// notify
+					if (/FFE0/.test(characteristic.uuid)) {
 						// 必须先启用 wx.notifyBLECharacteristicValueChange 才能监听到设备 onBLECharacteristicValueChange 事件
 						wx.notifyBLECharacteristicValueChange({
 							deviceId,
 							serviceId,
 							characteristicId: characteristic.uuid,
 							state: true,
-							type: 'notification',
+							type: "notification",
 							success: () => {
-								wx.onBLECharacteristicValueChange((res) => {
-									console.log('value', res?.value);
-									const hexValue = ab2hex(res?.value);
-									console.log('hexValue', hexValue);
-									const normalValue = parseInt(hexValue, '16');
-									console.log('normalValue', normalValue);
+								wx.onBLECharacteristicValueChange(res => {
+									const hexArr = ab2hex(res?.value) || [];
+									/*
+									* 十六进制 转 十进制 parseInt(0xFF, 16)
+									* 十进制 转 二进制 (十进制数).toString(2)
+									*/
+									const wArr = hexArr.map(x => parseInt(x, 16) & 0b00001111);
+									const weight = wArr[1] * 10000 + wArr[2] * 1000 + wArr[3] * 100 +  wArr[4] * 10 +  wArr[5] + wArr[7] * 0.1;
+									const isKilo = parseInt(hexArr[8], 16) === 0x6B && parseInt(hexArr[9], 16) === 0x67;
+									if (weight >= this.data.weight) {
+										this.setData({
+											weight,
+											isKilo,
+										});
+									}
 								});
 							},
-						})
-						if (this.timer) {
-							clearInterval(this.timer);
-						}
-						this.timer = ((characteristic) => {
-							return setInterval(() => {
-								wx.readBLECharacteristicValue({
-									deviceId,
-									serviceId,
-									characteristicId: characteristic.uuid,
-								});
-							}, 1000);
-						})(characteristic);
+						});
 					}
 				});
 			},
 		});
 	},
-	cloasBLE() {
+	onUnload() {
 		const { isBLEConnecting, isOpenBluetoothAdapter, deviceId } = this.data;
 		if (isBLEConnecting) {
 			wx.closeBLEConnection({
@@ -191,16 +196,47 @@ Page({
 			});
 		}
 	},
-
-	onUnload() {
-		this.cloasBLE();
-	},
 	wxLogin(ev) {
 		const { detail: loginInfo } = ev;
+		const consumerInfo = wx.getStorageSync("consumerInfo");
 		if (loginInfo?.openId) {
 			this.setData({
 				showLogin: false,
+			}, () => {
+				if (consumerInfo?.id) {
+					this.setData({
+						consumerInfo,
+					});
+				}
 			});
 		}
+	},
+	saveCurrentWeight() {
+		const { weight, consumerInfo, isKilo } = this.data;
+		utils.request(
+			{
+				url: "member/weight-update",
+				data: {
+					// 店铺id
+					shop_id: consumerInfo.shop_id,
+					customer_id: consumerInfo.id,
+					ymd: utils.formatTime(new Date(), "YYYY-MM-DD"),
+					weight: isKilo ? weight * 2 : weight,
+				},
+				method: "POST",
+				success: () => {
+					wx.showToast({
+						title: "保存成功",
+						icon: "none",
+					});
+					setTimeout(() => {
+						wx.reLaunch({
+							url: "/pages/weightLoss/index",
+						});
+					}, 1000);
+				},
+				isShowLoading: true,
+			},
+		);
 	},
 });
