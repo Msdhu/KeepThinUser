@@ -3,21 +3,21 @@
 	<view class="head" wx:if="{{weight}}">您当前的体重为: {{ weight }} {{ isKilo ? "kg" : "斤" }}</view>
 	<view class="btn-wrap">
 		<van-button
-		bind:click="openBluetoothAdapter"
-		round
-		customStyle="height: 70rpx; border-radius: 16rpx !important; color: #666;"
-	>
-		搜索设备
-	</van-button>
-	<van-button
-		wx:if="{{weight && consumerInfo.id}}"
-		round
-		bind:click="saveCurrentWeight"
-		color="#FDB03F"
-		customStyle="height: 70rpx; border-radius: 16rpx !important;"
-	>
-		保存体重
-	</van-button>
+			bind:click="reWeight"
+			round
+			customStyle="height: 70rpx; border-radius: 16rpx !important; color: #666;"
+		>
+			重新称重
+		</van-button>
+		<van-button
+			wx:if="{{weight && consumerInfo.id}}"
+			round
+			bind:click="saveCurrentWeight"
+			color="#FDB03F"
+			customStyle="height: 70rpx; border-radius: 16rpx !important;"
+		>
+			保存体重
+		</van-button>
 	</view>
 	<image class="weightPeopleImg" src="/assets/weightPeople.png"></image>
 	<view class="tips">
@@ -34,16 +34,6 @@
 					用户登录
 				</van-button>
 				<Login bindwxLogin="wxLogin" class="login" height="80" wx:if="{{!loginInfo.nickName}}"></Login>
-			</view>
-		</view>
-	</van-popup>
-	<van-popup show="{{ show }}" position="left" custom-style="width: 70%; height: 100%;" bind:close="onClose">
-		<view class="device-list">
-			<view wx:for="{{devices}}" wx:key="index" bindtap="onCreateBLEConnection" class="device-item" data-device-id="{{item.deviceId}}" data-index="{{index}}">
-				<van-icon name="bar-chart-o" />
-				<text style="font-size: 32rpx; color: #000; font-weight: bold; padding-left: 6rpx">
-					{{item.name || item.localName}}
-				</text>
 			</view>
 		</view>
 	</van-popup>

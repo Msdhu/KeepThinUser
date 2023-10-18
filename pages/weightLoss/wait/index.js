@@ -12,9 +12,6 @@ Page({
 		isDiscoveryStart: false,
 		isOpenBluetoothAdapter: false,
 		isBLEConnecting: false,
-		deviceId: "",
-		devices: [],
-		show: false,
 		weight: 0,
 		isKilo: false,
 	},
@@ -25,16 +22,14 @@ Page({
 				consumerInfo: wx.getStorageSync("consumerInfo") || {},
 			});
 		}
+		this.openBluetoothAdapter();
 	},
-	onClose() {
+	reWeight() {
 		this.setData({
-			show: false,
+			weight: 0,
 		});
 	},
 	openBluetoothAdapter() {
-		this.setData({
-			show: true,
-		});
 		wx.openBluetoothAdapter({
 			mode: 'central',
 			success: () => {
@@ -76,22 +71,15 @@ Page({
 		wx.onBluetoothDeviceFound((res) => {
 			const { devices } = this.data;
 			res.devices.forEach(device => {
-				const name = device.name || device.localName;
+				const name = (device.name || device.localName);
 				if (name && /YANGSHOU-/.test(name)) {
-					if (devices.findIndex(item => item.deviceId === device.deviceId) === -1) {
-						devices.push(device);
-					}
+					this.onCreateBLEConnection(device.deviceId);
 				}
-			});
-			this.setData({
-				devices: devices.sort((e, t) => t.RSSI - e.RSSI),
 			});
 		});
 	},
-	onCreateBLEConnection(ev) {
-		const deviceId = ev.currentTarget.dataset.deviceId;
+	onCreateBLEConnection(deviceId) {
 		this.setData({
-			deviceId,
 			isDiscoveryStart: false,
 		});
 		wx.stopBluetoothDevicesDiscovery();
@@ -147,7 +135,7 @@ Page({
 			success: res => {
 				res.characteristics.forEach(characteristic => {
 					// notify
-					if (/FFE0/.test(characteristic.uuid)) {
+					if (/FFE1/.test(characteristic.uuid)) {
 						// 必须先启用 wx.notifyBLECharacteristicValueChange 才能监听到设备 onBLECharacteristicValueChange 事件
 						wx.notifyBLECharacteristicValueChange({
 							deviceId,
@@ -163,14 +151,13 @@ Page({
 									* 十进制 转 二进制 (十进制数).toString(2)
 									*/
 									const wArr = hexArr.map(x => parseInt(x, 16) & 0b00001111);
-									const weight = wArr[1] * 10000 + wArr[2] * 1000 + wArr[3] * 100 +  wArr[4] * 10 +  wArr[5] + wArr[7] * 0.1;
+									const weight = wArr[1] * 1000 + wArr[2] * 100 + wArr[3] * 10 +  wArr[4] +  wArr[6] * 0.1;
 									const isKilo = parseInt(hexArr[8], 16) === 0x6B && parseInt(hexArr[9], 16) === 0x67;
-									if (weight >= this.data.weight) {
-										this.setData({
-											weight,
-											isKilo,
-										});
-									}
+									if (weight === this.data.weight) return;
+									this.setData({
+										weight,
+										isKilo,
+									});
 								});
 							},
 						});
