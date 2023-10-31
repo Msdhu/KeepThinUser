@@ -153,7 +153,7 @@ Page({
 									const wArr = hexArr.map(x => parseInt(x, 16) & 0b00001111);
 									const weight = wArr[1] * 1000 + wArr[2] * 100 + wArr[3] * 10 +  wArr[4] +  wArr[6] * 0.1;
 									const isKilo = parseInt(hexArr[8], 16) === 0x6B && parseInt(hexArr[9], 16) === 0x67;
-									if (weight === this.data.weight) return;
+									if (this.data.weight >= weight) return;
 									this.setData({
 										weight,
 										isKilo,
