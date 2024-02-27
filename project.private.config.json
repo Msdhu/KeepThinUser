@@ -9,8 +9,8 @@
             "list": [
                 {
                     "name": "顾客扫码绑定店铺",
-                    "pathName": "pages/bind/index",
-                    "query": "scene=15%2311",
+                    "pathName": "pages/weightLoss/wait/index",
+                    "query": "",
                     "launchMode": "default",
                     "scene": null
                 }
