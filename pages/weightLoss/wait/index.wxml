@@ -1,30 +1,12 @@
 <view class="wraper">
 	<view class="head" wx:if="{{!weight}}">请等待数据传输中...</view>
 	<view class="head" wx:if="{{weight}}">您当前的体重为: {{ weight }} {{ isKilo ? "kg" : "斤" }}</view>
-	<view class="btn-wrap">
-		<van-button
-			bind:click="reWeight"
-			round
-			customStyle="height: 70rpx; border-radius: 16rpx !important; color: #666;"
-		>
-			重新称重
-		</van-button>
-		<van-button
-			wx:if="{{weight && consumerInfo.id}}"
-			round
-			bind:click="saveCurrentWeight"
-			color="#FDB03F"
-			customStyle="height: 70rpx; border-radius: 16rpx !important;"
-		>
-			保存体重
-		</van-button>
-	</view>
 	<image class="weightPeopleImg" src="/assets/weightPeople.png"></image>
 	<view class="tips">
 		<view>提示</view>
 		<view>1.电子秤屏幕正常显示</view>
-		<view>2.上称后请平稳站立，不要摇晃身体</view>
-		<view>3.确保手机显示体重后再下称</view>
+		<view>2.上称后请平稳站立，确保显示稳定的体重数据</view>
+		<view>3.确保体重数据保存成功后再下称</view>
 	</view>
 	<van-popup customStyle="height: 100%;" position="top" show="{{showLogin}}">
 		<view class="loginMask">

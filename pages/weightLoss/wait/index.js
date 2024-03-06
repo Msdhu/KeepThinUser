@@ -5,6 +5,7 @@ const { utils } = app;
 const ab2hex = buffer => {
 	return Array.prototype.map.call(new Uint8Array(buffer), bit => ("00" + bit.toString(16)).slice(-2));
 };
+const weightList = [];
 
 Page({
 	data: {
@@ -19,15 +20,12 @@ Page({
 		if (!wx.getStorageSync("loginInfo")?.openId) {
 			this.setData({
 				showLogin: true,
-				consumerInfo: wx.getStorageSync("consumerInfo") || {},
 			});
 		}
-		this.openBluetoothAdapter();
-	},
-	reWeight() {
 		this.setData({
-			weight: 0,
+			consumerInfo: wx.getStorageSync("consumerInfo") || {},
 		});
+		this.openBluetoothAdapter();
 	},
 	openBluetoothAdapter() {
 		wx.openBluetoothAdapter({
@@ -153,11 +151,15 @@ Page({
 									const wArr = hexArr.map(x => parseInt(x, 16) & 0b00001111);
 									const weight = wArr[1] * 1000 + wArr[2] * 100 + wArr[3] * 10 +  wArr[4] +  wArr[6] * 0.1;
 									const isKilo = parseInt(hexArr[8], 16) === 0x6B && parseInt(hexArr[9], 16) === 0x67;
-									if (this.data.weight >= weight) return;
 									this.setData({
 										weight,
 										isKilo,
 									});
+									weightList.push(weight);
+									const len = weightList.length;
+									if (len > 2 && Math.abs(weightList[len - 1] - weightList[len - 2]) < 0.2) {
+										this.saveCurrentWeight(weight);
+									}
 								});
 							},
 						});
@@ -198,8 +200,19 @@ Page({
 			});
 		}
 	},
-	saveCurrentWeight() {
-		const { weight, consumerInfo, isKilo } = this.data;
+	saveCurrentWeight(weight) {
+		const { consumerInfo, isKilo } = this.data;
+
+		// 当微信账号没和顾客绑定时，无需保存体重数据
+		if (!consumerInfo?.id) {
+			setTimeout(() => {
+				wx.reLaunch({
+					url: "/pages/weightLoss/index",
+				});
+			}, 500);
+			return;
+		};
+
 		utils.request(
 			{
 				url: "member/weight-update",
@@ -213,14 +226,14 @@ Page({
 				method: "POST",
 				success: () => {
 					wx.showToast({
-						title: "保存成功",
+						title: "体重保存成功",
 						icon: "none",
 					});
 					setTimeout(() => {
 						wx.reLaunch({
 							url: "/pages/weightLoss/index",
 						});
-					}, 1000);
+					}, 50);
 				},
 				isShowLoading: true,
 			},

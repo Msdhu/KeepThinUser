@@ -197,7 +197,6 @@ Page({
 			? wx.scanCode({
 					onlyFromCamera: true,
 					success: (res) => {
-						console.log('scanCodeRes', res);
             wx.navigateTo({
               url: "/" + res.path,
             });

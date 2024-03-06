@@ -8,6 +8,13 @@
         "miniprogram": {
             "list": [
                 {
+                    "name": "",
+                    "pathName": "pages/weightLoss/wait/index",
+                    "query": "",
+                    "launchMode": "default",
+                    "scene": null
+                },
+                {
                     "name": "顾客扫码绑定店铺",
                     "pathName": "pages/weightLoss/wait/index",
                     "query": "",
