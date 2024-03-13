@@ -155,6 +155,9 @@ Page({
 										weight,
 										isKilo,
 									});
+									// 防止连接蓝牙后，人没有上称，造成页面跳转
+									if (weight < 10) return;
+
 									weightList.push(weight);
 									const len = weightList.length;
 									if (len > 2 && Math.abs(weightList[len - 1] - weightList[len - 2]) < 0.2) {
@@ -209,7 +212,7 @@ Page({
 				wx.reLaunch({
 					url: "/pages/weightLoss/index",
 				});
-			}, 500);
+			}, 20);
 			return;
 		};
 
@@ -233,7 +236,7 @@ Page({
 						wx.reLaunch({
 							url: "/pages/weightLoss/index",
 						});
-					}, 50);
+					}, 100);
 				},
 				isShowLoading: true,
 			},

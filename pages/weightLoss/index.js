@@ -59,11 +59,11 @@ Page({
 							// 今日体重
 							currentWeight: res.current_weight,
 							// 今日减重
-							todayLossedWeight: res.today_weight_reduce || 0,
+							todayLossedWeight: (((res.today_weight_reduce || 0) * 10000 + 1) / 10000).toFixed(1),
 							// 实际减重
 							realLossedWeight: (((res.real_weight_reduce || 0) * 10000 + 1) / 10000).toFixed(1),
 							// 累计体重
-							totalLossedWeight: res.total_weight_reduce || 0,
+							totalLossedWeight: (((res.total_weight_reduce || 0) * 10000 + 1) / 10000).toFixed(1),
 							// 累积到店
 							regiseterCount: res.arrive_count || 0,
 							// 未减斤数
@@ -75,7 +75,7 @@ Page({
 							// 标准体重
 							standardWeight: res.weight_normal || 0,
 							// 应减斤数
-							loseWeight: res.weight_reduce || 0,
+							loseWeight: (((res.weight_reduce || 0) * 10000 + 1) / 10000).toFixed(1),
 						},
 					});
 				},
